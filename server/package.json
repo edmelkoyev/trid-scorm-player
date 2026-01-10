@@ -1,0 +1,5 @@
+{
+  "devDependencies": {
+    "trid-scorm12-player": "file:.."
+  }
+}
