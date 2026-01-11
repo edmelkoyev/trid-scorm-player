@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest identifier="MANIFEST-1" version="1.0" 
+          xmlns="http://www.imsglobal.org/xsd/imscp_v1p1"
+          xmlns:adlcp="http://www.adlnet.org/xsd/adlcp_v1p3"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <metadata>
+        <schema>ADL SCORM</schema>
+        <schemaversion>1.2</schemaversion>
+        <adlcp:location>metadata.xml</adlcp:location>
+    </metadata>
+    <organizations default="ORG-1">
+        <organization identifier="ORG-1">
+            <title>EDW Course v2 20250926</title>
+            <item identifier="ITEM-1" identifierref="RES-1">
+                <title>Lesson 1</title>
+                <adlcp:masteryscore>80</adlcp:masteryscore>
+            </item>
+            <item identifier="ITEM-2" identifierref="RES-2">
+                <title>Lesson 2</title>
+                <adlcp:masteryscore>80</adlcp:masteryscore>
+            </item>
+            <item identifier="ITEM-3" identifierref="RES-3">
+                <title>Lesson 3</title>
+                <adlcp:masteryscore>80</adlcp:masteryscore>
+            </item>
+            <item identifier="ITEM-4" identifierref="RES-4">
+                <title>Lesson 4</title>
+                <adlcp:masteryscore>80</adlcp:masteryscore>
+            </item>
+        </organization>
+    </organizations>
+    <resources>
+        <resource identifier="RES-4" type="webcontent" adlcp:scormtype="sco" href="lesson04.html">
+            <file href="lesson04.html"/>
+            <file href="js/scorm_clent_api.js"/>
+        </resource>
+        <resource identifier="RES-1" type="webcontent" adlcp:scormtype="sco" href="lesson01.html">
+            <file href="lesson01.html"/>
+            <file href="js/scorm_clent_api.js"/>
+        </resource>
+        <resource identifier="RES-2" type="webcontent" adlcp:scormtype="sco" href="lesson02.html">
+            <file href="lesson02.html"/>
+            <file href="js/scorm_clent_api.js"/>
+        </resource>
+        <resource identifier="RES-3" type="webcontent" adlcp:scormtype="sco" href="lesson03.html">
+            <file href="lesson03.html"/>
+            <file href="js/scorm_clent_api.js"/>
+        </resource>
+       
+    </resources>
+</manifest>

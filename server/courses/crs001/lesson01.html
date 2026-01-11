@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>EDW CRS: SCO-01</title>
+    <script src="js/scorm_clent_api.js"></script>
+</head>
+<body style="background-color: rgb(228, 153, 134);">
+    <h1>Welcome to SCORM 1.2!</h1>
+    <h2>Lesson 01</h2>
+    <hr />
+    <button onclick="startLesson()">Start</button>
+    <hr />
+    <div>Current Progress <span id="scoreRawElId">n/a</span></div>
+    <button id="btnNextStepElId" disabled onclick="makeNextStep()">Make Next Step</button>
+    <hr />
+    <button id="btnFinishElId" disabled onclick="finishLesson()">Finish</button>
+    <hr />
+    <div>Error handling:</div>
+    <button id="btnMakeApiMistake" onclick="makeApiMistake()">Make API Mistake</button>
+    <main>
+        <section>
+            <h2>What is SCORM?</h2>
+            <p>SCORM is a set of technical standards for eLearning products. It provides the communication method and data models that allow eLearning content and LMSs to work together. It tells programmers how to write code so that what they build will “play well” with other eLearning software. SCORM is the most widely used eLearning standard available.</p>
+            <p>SCORM, which stands for Sharable Content Object Reference Model,  is a set of technical standards for eLearning software products. SCORM tells programmers how to write their code so that it can “play well” with other eLearning software. It is the de facto industry standard for eLearning interoperability. Specifically, SCORM governs how online learning content and Learning Management Systems (LMSs) communicate with each other. SCORM does not speak to instructional design or any other pedagogical concern — it is purely a technical standard.</p>
+            <section>
+                <h3>Can you help me with an example or analogy?</h3>
+                <p>Let’s take DVDs for example. When you buy a new movie on DVD you don’t need to check to see if it works with your brand of DVD player. A regular DVD will play on a Toshiba the same as it will on a Panasonic. That’s because DVD movies are produced using a set of standards. Without these standards a studio releasing a new movie on DVD would have a big problem. They would need to make differently formatted DVDs for each brand of DVD player. This is how online learning used to be before SCORM was created.</p>
+                <p>The SCORM standard makes sure that all eLearning content and LMSs can work with each other, just like the DVD standard makes sure that all DVDs will play in all DVD players. If an LMS is SCORM conformant, it can play any content that is SCORM conformant, and any SCORM conformant content can play in any SCORM conformant LMS.</p>
+            </section>
+            <section>
+                <h3>Why should I use SCORM?</h3>
+                <p>For some, SCORM is simply an obstacle on the path to a sale. For others, SCORM is a tool that enables effective, efficient online training. At its core, SCORM allows content authors to distribute their content to a variety of Learning Management Systems (LMS) with the smallest headache possible. And for an LMS to handle content from a variety of sources.</p>
+            </section>
+            <section>
+                <h3>Are there different types of SCORM and do I need to support all of them?</h3>
+                <p>Yes! There are technically five versions of SCORM: SCORM 1.1, SCORM 1.2, SCORM 2004 2nd Edition, SCORM 2004 3rd Edition and SCORM 2004 4th edition. When it comes to which versions you should use, it really depends on what you need from your content or what type of content your customers have that you need to support in your LMS.</p>
+                <p>SCORM 1.2 and SCORM 2004 3rd Edition are the most widely used versions of SCORM. For more detail on the versions of SCORM, including the various flavors of SCORM 2004, visit the SCORM versions comparison chart.</p>
+            </section>
+            <section>
+                <h3>Do you produce SCORM?</h3>
+                <p>No. SCORM is produced by ADL, a research group sponsored by the United States Department of Defense (DoD). Rustici Software is an independent company that specializes in helping other companies become SCORM conformant.</p>
+            </section>
+        </section>
+        <section>
+            <h2>Why should I use SCORM?</h2>
+            <p>The biggest benefit of SCORM is interoperability. If you create content, your client will need to upload that content into their LMS. If you are an LMS or Learning Platform provider, a client will want to import content from other sources. SCORM takes care of making sure content is compatible with an LMS and that an LMS can import, launch and track content.</p>
+            <p>Different people adopt SCORM for different reasons. The beauty of a de facto standard however is that all of those reasons are in the adopter’s self-interest; people adopt SCORM because it saves them time or makes them money. SCORM has many benefits, some of which are misunderstood and others which aren’t heralded enough.</p>
+            <section>
+                <h3>Market Benefits Stemming From Interoperability</h3>
+                <p>The primary benefit of SCORM is interoperability. If you produce e-learning content, invariably one (or more likely many) of your clients will ask you to integrate that content into an LMS. Similarly, if you produce an LMS it is certain that your clients will want to import content from a number of different sources into that LMS. SCORM allows this integration to happen seamlessly and simply. Without SCORM, integrating with other vendors is a time-consuming and costly process. SCORM will make your organization more efficient and reduce your support burden.</p>
+                <p>SCORM is the de facto industry standard for interoperability. If you ever hope to integrate e-learning content with an LMS, it will simply be expected that you are SCORM conformant. SCORM conformance is a prerequisite to selling products in the e-learning space.</p>
+                <p>SCORM conformance is also required for many RFPs. It is difficult to sell enterprise software withing being able to check all the boxes on an RFP. Virtually all procurements for e-learning content and LMSs require that the submitted proposals include SCORM conformant products.</p>
+                <p>Increasing the number of outlets you have for your product dramatically increases your sales potential. E-learning content that can only play in one place can only be sold to a very limited audience. Similarly, LMSs that can only play content designed for that LMS don’t have much appeal. Content that can be played anywhere and LMSs that can deliver any content are far more useful and have dramatically more appeal to customers. There is a huge ecosystem of e-learning products that all work together because of SCORM. Joining this marketplace significantly increases your market potential.</p>
+            </section>
+        </section>
+        <section>
+            <h2>What are the technical details?</h2>
+            <p>SCORM is composed of three sub-specifications. Content packaging specifies how content should be packaged and described. Run-Time specifies how content should be launched, how data communicates with the LMS and includes the spec for the data model of that communication. Lastly, Sequencing specifies how a learner can navigate between parts of a course (SCOs).</p>
+        </section>
+    </main>
+
+    <script>
+        const SCORE_INCREMENT = 10;
+        let scormAPI = undefined;
+        let scoScoreRaw = 0;
+
+        function startLesson() {
+            scormAPI = SCORM.init();
+    
+            if (scormAPI) {
+                if (SCORM.get("cmi.core.score.raw")) {
+                    scoScoreRaw = Number(SCORM.get("cmi.core.score.raw"));
+                } else {
+                    SCORM.set('cmi.core.score.min', 0);
+                    SCORM.set('cmi.core.score.max', 100);
+                    SCORM.set('cmi.core.score.raw', 0);
+                }
+                
+                enableButton('btnNextStepElId', true);
+                enableButton('btnFinishElId', true);
+            }
+
+            renderScore('scoreRawElId', scoScoreRaw);
+        }
+
+        function makeNextStep() {
+            const nextRaw = scoScoreRaw < 100 ? scoScoreRaw + SCORE_INCREMENT : scoScoreRaw;
+            const lessonStatus = nextRaw === 100 ? 'completed' : 'incomplete';
+
+            SCORM.set('cmi.core.score.raw', nextRaw);
+            SCORM.set('cmi.core.lesson_status', lessonStatus);
+            SCORM.commit();
+
+            scoScoreRaw = nextRaw;
+            window.console.log(`**** scoScoreRaw: ${scoScoreRaw}`)
+
+            renderScore('scoreRawElId', scoScoreRaw);
+
+            if (lessonStatus === 'completed'){
+                enableButton('btnNextStepElId', false);
+            }
+        }
+
+
+
+        function makeApiMistake() {
+            const successResultApi = SCORM.set('cmi.core.student_id', "JOeStudent");
+            const successResult = successResultApi.trim().toLowerCase() === 'true';
+
+            console.log(`*** successResultApi: ${successResultApi}, ${typeof successResultApi}`);
+            console.log(`*** successResult: ${successResult}`);
+
+            if ( !successResult ){
+                console.log( '**** Error Handling:');
+
+                const errCode = SCORM.getLastError();
+                console.log(`LMSGetLastError: ${errCode}`);
+                console.log(`LMSGetErrorString: ${SCORM.getErrorString(errCode)}`);
+
+            } else {
+                console.log( '**** Error handling: Incorrect SCORM API contract.');
+            }
+        }
+
+        function finishLesson() {
+            SCORM.finish();
+            enableButton('btnFinishElId', false);
+        }
+
+        function enableButton ( btnId, enable) {
+            const btn = document.getElementById(btnId);
+            if (btn) {
+                btn.disabled = !enable;
+            }
+        }
+
+        function renderScore ( scoreElId, scoreVal) {
+            const scoreEl = document.getElementById(scoreElId);
+            if (scoreEl) {
+                scoreEl.textContent = scoreVal;
+            }
+        }
+    </script>
+</body>
+</html>

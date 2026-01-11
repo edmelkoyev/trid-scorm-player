@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>EDW CRS: SCO-02</title>
+    <script src="js/scorm_clent_api.js"></script>
+</head>
+<body style="background-color: rgb(228, 222, 134);">
+    <h1>Welcome to SCORM 1.2!</h1>
+    <h2>Lesson 02</h2>
+    <hr />
+    <button onclick="startLesson()">Start</button>
+    <hr />
+    <div>Current Progress <span id="scoreRawElId">n/a</span></div>
+    <button id="btnNextStepElId" disabled onclick="makeNextStep()">Make Next Step</button>
+    <hr />
+    <button id="btnFinishElId" disabled onclick="finishLesson()">Finish</button>
+
+    <script>
+        const SCORE_INCREMENT = 10;
+        let scormAPI = undefined;
+        let scoScoreRaw = 0;
+
+        function startLesson() {
+            scormAPI = SCORM.init();
+    
+            if (scormAPI) {
+                if (SCORM.get("cmi.core.score.raw")) {
+                    scoScoreRaw = Number(SCORM.get("cmi.core.score.raw"));
+                } else {
+                    SCORM.set('cmi.core.score.min', 0);
+                    SCORM.set('cmi.core.score.max', 100);
+                    SCORM.set('cmi.core.score.raw', 0);
+                }
+                
+                enableButton('btnNextStepElId', true);
+                enableButton('btnFinishElId', true);
+            }
+
+            renderScore('scoreRawElId', scoScoreRaw);
+        }
+
+        function makeNextStep() {
+            const nextRaw = scoScoreRaw < 100 ? scoScoreRaw + SCORE_INCREMENT : scoScoreRaw;
+            const lessonStatus = nextRaw === 100 ? 'completed' : 'incomplete';
+
+            SCORM.set('cmi.core.score.raw', nextRaw);
+            SCORM.set('cmi.core.lesson_status', lessonStatus);
+            SCORM.commit();
+
+            scoScoreRaw = nextRaw;
+            window.console.log(`**** scoScoreRaw: ${scoScoreRaw}`)
+
+            renderScore('scoreRawElId', scoScoreRaw);
+
+            if (lessonStatus === 'completed'){
+                enableButton('btnNextStepElId', false);
+            }
+        }
+
+        function finishLesson() {
+            SCORM.finish();
+            enableButton('btnFinishElId', false);
+        }
+
+        function enableButton ( btnId, enable) {
+            const btn = document.getElementById(btnId);
+            if (btn) {
+                btn.disabled = !enable;
+            }
+        }
+
+        function renderScore ( scoreElId, scoreVal) {
+            const scoreEl = document.getElementById(scoreElId);
+            if (scoreEl) {
+                scoreEl.textContent = scoreVal;
+            }
+        }
+    </script>
+</body>
+</html>
