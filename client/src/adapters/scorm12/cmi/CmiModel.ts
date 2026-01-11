@@ -19,6 +19,11 @@ export class CmiModel {
     return true;
   }
 
+  setSystemValue(key: string, value: string): boolean {
+    this.data[key] = value;
+    return true;
+  }
+
   snapshot(): Record<string, string> {
     return { ...this.data };
   }

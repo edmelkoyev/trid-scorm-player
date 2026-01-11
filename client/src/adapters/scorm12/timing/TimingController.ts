@@ -6,7 +6,8 @@ export class TimingController {
   private accumulatedMs = 0;
 
   constructor(private cmi: CmiModel) {
-    const total = cmi.getValue("cmi.core.total_time");
+    this.cmi = cmi;
+    const total = this.cmi.getValue("cmi.core.total_time");
     this.accumulatedMs = parseScormTime(total);
   }
 
@@ -16,7 +17,7 @@ export class TimingController {
 
   updateTotalTime() {
     const sessionMs = Date.now() - this.sessionStart;
-    this.cmi.setValue(
+    this.cmi.setSystemValue(
       "cmi.core.total_time",
       formatScormTime(this.accumulatedMs + sessionMs)
     );
@@ -27,7 +28,7 @@ export class TimingController {
     this.accumulatedMs += sessionMs;
 
     this.cmi.setValue("cmi.core.session_time", formatScormTime(sessionMs));
-    this.cmi.setValue(
+    this.cmi.setSystemValue(
       "cmi.core.total_time",
       formatScormTime(this.accumulatedMs)
     );
