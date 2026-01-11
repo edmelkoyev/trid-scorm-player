@@ -33,6 +33,15 @@ export class Scorm12API implements IScormAPI {
       return "";
     }
 
+    if (element.endsWith("._children")) {
+      const parent = element.replace("._children", "");
+      const children = this.cmi.getChildren(parent)
+      if (children === "") {
+        this.lastError = ScormErrorCode.NotImplementedError
+      }
+      return children;
+    }
+
     const value = this.cmi.getValue(element);
     this.lastError = ScormErrorCode.NoError;
     return value ?? "";
