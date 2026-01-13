@@ -5,6 +5,7 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 let cmi = {
+    'cmi.core.entry': 'ab-initio',
     'cmi.core.lesson_status': 'incomplete',
     'cmi.core.lesson_location': '',
     'cmi.core.score.raw': '',

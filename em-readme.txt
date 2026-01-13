@@ -1,38 +1,50 @@
-my-app/
-├── client/                 # React frontend
-│   ├── public/
-│   │   └── index.html
-│   ├── src/
-│   │   ├── components/
-│   │   └── index.tsx
-│   ├── tsconfig.json
-│   └── webpack.config.js
-├── server/                 # Express backend
-│   ├── src/
-│   │   └── index.ts
-│   └── tsconfig.json
-├── package.json
-└── tsconfig.json           # Base config
+cmi.core.entry
+=========================
+Indicates how the learner entered the SCO.
 
-# Main dependencies
-npm install react react-dom express
+- "ab-initio" → first launch
+- "resume" → returning to a suspended attempt
+- empty ("") → LMS-specific or completed attempt
 
-# Development dependencies
-npm install -D typescript webpack webpack-cli webpack-dev-server html-webpack-plugin ts-loader @types/react @types/react-dom @types/express @types/node concurrently rimraf
-
-# Client-specific
-npm install -D --prefix client @types/webpack-env
-
-# Server-specific
-npm install -D --prefix server
+LMS: set value
+SCO: get value and use it for resume in combination with cmi.core.lesson_location
 
 
-{
-  "scripts": {
-    "dev": "concurrently \"npm run dev:client\" \"npm run dev:server\"",
-    "dev:client": "cd client && npx webpack serve --mode development",
-    "dev:server": "cd server && npx ts-node-dev --respawn src/index.ts",
-    "build": "rimraf client/dist && cd client && npx webpack --mode production && cd ../server && npx tsc",
-    "start": "node server/dist/index.js"
-  }
-}
+
+cmi.core.lesson_status
+=========================
+Indicates the learner’s completion and success state for the SCO.
+
+Valid values (SCORM 1.2):
+- "not attempted"
+- "incomplete"
+- "completed"
+- "passed"
+- "failed"
+- "browsed" (rarely used)
+
+SCO: set value / get value
+LMS: ?
+
+On SCO launch: "incomplete"
+On successful completion: "completed"
+  If assessment-based: "passed" / "failed"
+
+Don’t downgrade status:
+  Once set to "completed" or "passed", do not revert to "incomplete"
+
+
+cmi.core.exit
+=========================
+Tells the LMS how the learner exited the SCO.
+
+- "time-out" → max_time_allowed has been exceeded
+- "suspend" → learner intends to resume later
+- "logout" → normal exit
+- empty ("") → session ended without intent to resume
+
+
+SCO: set value
+LMS: ? 405, 401
+
+
