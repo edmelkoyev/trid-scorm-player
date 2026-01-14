@@ -1,5 +1,6 @@
 import { CmiValidator } from "./CmiValidator";
 import { CMI_CHILDREN_MAP } from "./CmiChildrenMap";
+import { ScormErrorCodeType, ScormErrorCode } from "../api/ScormErrorCodes";
 
 const cmiExcludeKeys = new Set([
     'cmi._version',
@@ -33,10 +34,17 @@ export class CmiModel {
     return this.data[key];
   }
 
-  setValue(key: string, value: string): boolean {
-    if (!CmiValidator.validateSet(key, value)) {
-      return false;
+  setValue(key: string, value: string): boolean | ScormErrorCodeType {
+    const validateResult = CmiValidator.validateSet(key, value);
+    if (typeof validateResult === 'boolean') {
+      if (!validateResult) {
+        return false;
+      }
     }
+    if (validateResult as ScormErrorCodeType in ScormErrorCode) {
+      return validateResult;
+    }
+
     this.data[key] = value;
     return true;
   }
@@ -53,5 +61,5 @@ export class CmiModel {
     return dataToSend;
   }
 
-  
+
 }

@@ -1,9 +1,9 @@
-import { IScormAPI } from "./ScormApiTypes";
-import { ScormErrorCode, ScormErrorStrings } from "./ScormErrorCodes";
-import { CmiModel } from "../cmi/CmiModel";
-import { PlayerStateMachine } from "../state/PlayerStateMachine";
-import { TimingController } from "../timing/TimingController";
-import { BackendClient } from "../backend/BackendClient";
+import {IScormAPI} from "./ScormApiTypes";
+import {ScormErrorCode, ScormErrorCodeType, ScormErrorStrings} from "./ScormErrorCodes";
+import {CmiModel} from "../cmi/CmiModel";
+import {PlayerStateMachine} from "../state/PlayerStateMachine";
+import {TimingController} from "../timing/TimingController";
+import {BackendClient} from "../backend/BackendClient";
 
 export class Scorm12API implements IScormAPI {
   private lastError = ScormErrorCode.NoError;
@@ -37,7 +37,7 @@ export class Scorm12API implements IScormAPI {
       const parent = element.replace("._children", "");
       const children = this.cmi.getChildren(parent)
       if (children === "") {
-        this.lastError = ScormErrorCode.NotImplementedError
+        this.lastError = ScormErrorCode.NotImplementedError;
       }
       return children;
     }
@@ -53,12 +53,20 @@ export class Scorm12API implements IScormAPI {
       return "false";
     }
 
-    const success = this.cmi.setValue(element, value);
-    this.lastError = success
-      ? ScormErrorCode.NoError
-      : ScormErrorCode.InvalidArgument;
+    const setValueResult = this.cmi.setValue(element, value);
+    if (typeof setValueResult === 'boolean') {
+      this.lastError = setValueResult
+        ? ScormErrorCode.NoError
+        : ScormErrorCode.InvalidArgument;
+      return setValueResult ? "true" : "false";
+    }
 
-    return success ? "true" : "false";
+    if ((setValueResult as ScormErrorCodeType) in ScormErrorCode) {
+      this.lastError = setValueResult;
+      return "false";
+    }
+
+    return "false";
   }
 
   LMSCommit(_: string): string {
