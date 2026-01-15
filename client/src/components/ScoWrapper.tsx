@@ -2,32 +2,31 @@ import React from "react";
 import { launchPlayer } from "../adapters/scorm12/player/PlayerBootstrap";
 
 interface ScoWrapperProps {
-  attemptId: string;
+  courseId: string,
+  scoId: string;
   scoUrl: string;
 }
 
-const ScoWrapper: React.FC<ScoWrapperProps> = ({ attemptId, scoUrl }) => {
+const ScoWrapper: React.FC<ScoWrapperProps> = ({ courseId, scoId, scoUrl }) => {
   const [isAuthorized, setIsAuthorized] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
 
   React.useEffect(() => {
     const authorizeScorm = async () => {
       try {
-        const context = await launchPlayer(scoUrl, attemptId);
-        
+        const context = await launchPlayer(courseId, scoId);
         setIsAuthorized(true);
         setError(null);
       } catch (err) {
-        console.error('SCORM authorization failed:', err);
         setError(err instanceof Error ? err.message : 'Authorization failed');
         setIsAuthorized(false);
       }
     };
     
-    if (attemptId) {
+    if (courseId && scoId) {
       authorizeScorm();
     }
-  }, [attemptId]);
+  }, [courseId, scoId]);
 
   if (error) {
     return <div className="error">Error: {error}</div>;

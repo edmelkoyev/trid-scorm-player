@@ -1,6 +1,17 @@
 import { CmiValidator } from "./CmiValidator";
 import { CMI_CHILDREN_MAP } from "./CmiChildrenMap";
 
+const cmiExcludeKeys = new Set([
+    'cmi._version',
+    'cmi.core.credit',
+    'cmi.core.entry',
+    'cmi.core.lesson_mode',
+    'cmi.core.student_id',
+    'cmi.core.student_name',
+    'cmi.core.total_time',
+    'cmi.launch_data'
+]);
+
 export class CmiModel {
   private data: Record<string, string>;
 
@@ -36,7 +47,10 @@ export class CmiModel {
   }
 
   snapshot(): Record<string, string> {
-    return { ...this.data };
+    const dataToSend = Object.fromEntries(
+      Object.entries(this.data).filter(([key]) => !cmiExcludeKeys.has(key))
+    );
+    return dataToSend;
   }
 
   
