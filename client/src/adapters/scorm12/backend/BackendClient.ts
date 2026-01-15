@@ -9,8 +9,7 @@ export class BackendClient {
     this.lmsFinish = `${cmiBaseUrl}/LMSFinish`;
   }
 
-  async commitCMI(cmi: Record<string, string>) {
-    const url = `` 
+  async commitCMI(cmi: Record<string, string>) { 
     await fetch(this.lmsCommitUrl, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -18,8 +17,7 @@ export class BackendClient {
     });
   }
 
-  async finishCMI(cmi: Record<string, string>) {
-    const url = `` 
+  async finishCMI(cmi: Record<string, string>) { 
     await fetch(this.lmsFinish, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
