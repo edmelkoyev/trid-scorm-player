@@ -8,8 +8,11 @@ export enum ScormErrorCode {
     NotImplementedError = 401,
     InvalidSetValue = 402,
     ReadOnly = 403,
-    WriteOnly = 404
+    WriteOnly = 404,
+    IncorrectDataType = 405
 }
+
+export type ScormErrorCodeType = typeof ScormErrorCode[keyof typeof ScormErrorCode];
 
 export const ScormErrorStrings: Record<number, string> = {
     0: "No error",
@@ -21,5 +24,6 @@ export const ScormErrorStrings: Record<number, string> = {
     401: "Not Implemented Error",
     402: "Invalid Set Value, element is a keyword",
     403: "Element is read only",
-    404: "Element is write only"
+    404: "Element is write only",
+    405: "Incorrect data type",
 };
