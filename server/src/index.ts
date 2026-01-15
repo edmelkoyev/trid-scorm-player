@@ -4,7 +4,7 @@ import path from 'path';
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-let cmiPack = {
+let cmiPack: {elements: Record<string, string> } = {
   elements:{
     'cmi.core.entry': 'ab-initio',
     'cmi.core.lesson_status': 'incomplete',
@@ -15,6 +15,13 @@ let cmiPack = {
     'cmi.suspend_data': ''
   }
 };
+
+const injectReadOnly = (currentCmiPack: { elements: Record<string, string> }, updateCmiPack: { elements: Record<string, string> }) => ({
+  elements: {
+    ...currentCmiPack.elements,
+    ...updateCmiPack.elements
+  }
+})
 
 app.use(express.json());
 
@@ -35,17 +42,17 @@ app.get('/scorm/api/crs123/sco456/data-elements', (req, res) => {
 });
 
 app.patch('/scorm/api/crs123/sco456/data-elements', (req, res) => {
-  cmiPack = req.body;
+  cmiPack = injectReadOnly(cmiPack, req.body);
   res.json(cmiPack);
 });
 
 app.post('/scorm/api/crs123/sco456/LMSCommit', (req, res) => {
-  cmiPack = req.body;
+  cmiPack = injectReadOnly(cmiPack, req.body);
   res.json(cmiPack);
 });
 
 app.post('/scorm/api/crs123/sco456/LMSFinish', (req, res) => {
-  cmiPack = req.body;
+  cmiPack = injectReadOnly(cmiPack, req.body);
   res.json(cmiPack);
 });
 
