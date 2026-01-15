@@ -6,6 +6,8 @@
     "dev": "concurrently \"npm run dev:client\" \"npm run dev:server\"",
     "dev:client": "cd client && npx webpack serve --mode development",
     "dev:server": "cd server && npx ts-node-dev --respawn src/index.ts",
+    "test:client": "cd client && npm run test",
+    "test": "npm run test:client",
     "build": "rimraf client/dist && cd client && npx webpack --mode production && cd ../server && npx tsc",
     "start": "node server/dist/index.js"
   },

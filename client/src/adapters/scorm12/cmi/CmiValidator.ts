@@ -1,15 +1,14 @@
-import { ScormErrorCodeType } from "../api/ScormErrorCodes";
+import { ScormErrorCodeType, ScormErrorCode } from "../api/ScormErrorCodes";
 import { CMI_SCHEMA } from "./CmiSchema";
 
 export class CmiValidator {
   static validateSet(key: string, value: string): boolean | ScormErrorCodeType {
     const schema = CMI_SCHEMA[key];
-    if (!schema) return true;
+    if (!schema) return ScormErrorCode.NotImplementedError;
 
     if (schema.readOnly?.value) return schema.readOnly?.error || false;
 
     if (schema.enum?.value && !schema.enum?.value.includes(value)) {
-      debugger
       return schema.enum?.error || false;
     }
 
