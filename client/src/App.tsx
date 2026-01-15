@@ -39,8 +39,8 @@ const App = () => {
       {error && <p style={{ color: 'red' }}>Error: {error}</p>}
       {data && (
         <div style={{ marginTop: '20px' }}>
-          <p><strong>attemptId:</strong> {data.attemptId}, <strong>launchUrl:</strong> {data.launchUrl}</p>
-          <ScoWrapper attemptId={data.attemptId} scoUrl={data.launchUrl} />
+          <p><strong>courseId:</strong> {data.courseId}, <strong>scoId:</strong> {data.scoId}, <strong>scoUrl:</strong> {data.scoUrl}</p>
+          <ScoWrapper courseId={data.courseId} scoId={data.scoId} scoUrl={data.scoUrl} />
         </div>
       )}
     </div>
