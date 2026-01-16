@@ -11,11 +11,11 @@ export class PlayerContext {
   public backend: BackendClient;
   public api: Scorm12API;
 
-  constructor(cmiData: Record<string, string>, cmiBaseUrl: string) {
+  constructor(cmiData: Record<string, string>, cmiBaseUrl: string, updateProgress: () => void) {
     this.cmi = new CmiModel(cmiData);
     this.stateMachine = new PlayerStateMachine();
     this.timing = new TimingController(this.cmi);
-    this.backend = new BackendClient(cmiBaseUrl);
+    this.backend = new BackendClient(cmiBaseUrl, updateProgress);
 
     // Set API for SCO to use
     this.api = new Scorm12API(this.cmi, this.stateMachine, this.timing, this.backend);

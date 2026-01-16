@@ -9,12 +9,11 @@ import { PlayerContext } from "./PlayerContext";
  * - Exposes window.API for SCO
  * - Loads SCO iframe
  *
- * @param scoUrl URL of the SCO launch HTML
- * @param attemptId ID of the attempt for backend CMI
+ * @param cmiBaseUrl SCORM API URL
+ * @param updateProgress callback to trigger on possible progress changes
  */
-export async function launchPlayer(courseId: string, scoId: string) {
+export async function launchPlayer(cmiBaseUrl: string, updateProgress: () => void) {
   try {
-    const cmiBaseUrl = `/scorm/api/${courseId}/${scoId}`;
     // 1️⃣ Fetch CMI JSON from backend
     const res = await fetch(`${cmiBaseUrl}/data-elements`);
     if (!res.ok) throw new Error("Failed to fetch CMI from backend");
@@ -23,7 +22,7 @@ export async function launchPlayer(courseId: string, scoId: string) {
     const rawCmi = normalizeCmi(cmiPack.elements);
 
     // 2️⃣ Initialize PlayerContext (state, timing, backend, API)
-    const context = new PlayerContext(rawCmi, cmiBaseUrl);
+    const context = new PlayerContext(rawCmi, cmiBaseUrl, updateProgress);
 
     console.log("Player context setup successfully. window.API is ready for SCO.");
 
