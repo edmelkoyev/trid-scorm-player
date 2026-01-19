@@ -23,7 +23,11 @@ describe('Scorm12API', () => {
     mockCmi = new CmiModel({}) as jest.Mocked<CmiModel>;
     mockStateMachine = new PlayerStateMachine() as jest.Mocked<PlayerStateMachine>;
     mockTiming = new TimingController(mockCmi) as jest.Mocked<TimingController>;
-    mockBackend = new BackendClient('http://example.com') as jest.Mocked<BackendClient>;
+    mockBackend = {
+      commitCMI: jest.fn(),
+      finishCMI: jest.fn(),
+      saveCMI: jest.fn(),
+    } as unknown as jest.Mocked<BackendClient>;
 
     // Setup default mocks
     mockStateMachine.canInitialize.mockReturnValue(true);
