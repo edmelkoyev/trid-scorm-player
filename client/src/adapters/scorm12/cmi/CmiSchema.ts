@@ -19,6 +19,10 @@ export interface CmiElementSchema {
     max?: number;
     error?: ScormErrorCodeType;
   };
+  writeOnly?: {
+    value: boolean;
+    error?: ScormErrorCodeType;
+  }
 }
 
 export const CMI_SCHEMA: Record<string, CmiElementSchema> = {
@@ -54,6 +58,18 @@ export const CMI_SCHEMA: Record<string, CmiElementSchema> = {
       error: ScormErrorCode.ReadOnly
     }
   },
+  "cmi.core.exit": {
+    writeOnly: {
+      value: true,
+      error: ScormErrorCode.WriteOnly
+    }
+  },
+  "cmi.core.session_time": {
+    writeOnly: {
+      value: true,
+      error: ScormErrorCode.WriteOnly
+    }
+  },
   "cmi.core.total_time": {
     readOnly: {
       value: true,
@@ -65,5 +81,5 @@ export const CMI_SCHEMA: Record<string, CmiElementSchema> = {
       value: 255,
       error: ScormErrorCode.IncorrectDataType
     },
-  },
+  }
 };

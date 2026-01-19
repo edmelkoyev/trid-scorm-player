@@ -16,12 +16,24 @@ let cmiPack: {elements: Record<string, string> } = {
   }
 };
 
-const injectReadOnly = (currentCmiPack: { elements: Record<string, string> }, updateCmiPack: { elements: Record<string, string> }) => ({
-  elements: {
-    ...currentCmiPack.elements,
-    ...updateCmiPack.elements
+const cmiExcludeKeys = new Set([
+    'cmi.core.session_time',
+]);
+
+const injectReadOnly = (currentCmiPack: { elements: Record<string, string> }, updateCmiPack: { elements: Record<string, string> }) => {
+  const total_time_stub = updateCmiPack.elements['cmi.core.session_time'];
+  const normalizedUpdateElements = Object.fromEntries(
+    Object.entries(updateCmiPack.elements).filter(([key]) => !cmiExcludeKeys.has(key))
+  );
+
+  return {
+    elements: {
+      ...currentCmiPack.elements,
+      ...normalizedUpdateElements,
+      'cmi.core.total_time': total_time_stub
+    }
   }
-})
+}
 
 app.use(express.json());
 

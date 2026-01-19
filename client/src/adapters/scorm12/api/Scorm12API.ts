@@ -74,9 +74,7 @@ export class Scorm12API implements IScormAPI {
       this.lastError = ScormErrorCode.NotInitialized;
       return "false";
     }
-
-    this.timing.updateTotalTime();
-    this.cmi.setSystemValue('cmi.core.entry', 'resume');
+  
     this.backend.commitCMI(this.cmi.snapshot());
     this.lastError = ScormErrorCode.NoError;
     return "true";
@@ -89,7 +87,6 @@ export class Scorm12API implements IScormAPI {
     }
 
     this.timing.finalizeSession();
-    this.cmi.setSystemValue('cmi.core.entry', '');
     this.backend.finishCMI(this.cmi.snapshot());
     this.stateMachine.terminate();
     this.lastError = ScormErrorCode.NoError;
