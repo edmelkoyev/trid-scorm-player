@@ -2,11 +2,14 @@ export class BackendClient {
   private cmiDataUrl: string;
   private lmsCommitUrl: string;
   private lmsFinish: string;
+  private updateProgress: () => void;
 
-  constructor(cmiBaseUrl: string) {
+  constructor(cmiBaseUrl: string, updateProgress: () => void) {
     this.cmiDataUrl = `${cmiBaseUrl}/data-elements`
     this.lmsCommitUrl = `${cmiBaseUrl}/LMSCommit`;
     this.lmsFinish = `${cmiBaseUrl}/LMSFinish`;
+
+    this.updateProgress = updateProgress;
   }
 
   async commitCMI(cmi: Record<string, string>) { 
@@ -15,6 +18,7 @@ export class BackendClient {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ elements: {...cmi}})
     });
+    this.updateProgress();
   }
 
   async finishCMI(cmi: Record<string, string>) { 
@@ -23,6 +27,7 @@ export class BackendClient {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ elements: {...cmi}})
     });
+    this.updateProgress();
   }
 
   async saveCMI(cmi: Record<string, string>) {
@@ -31,5 +36,6 @@ export class BackendClient {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ elements: {...cmi}})
     });
+    this.updateProgress();
   }
 }

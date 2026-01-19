@@ -14,7 +14,7 @@ const ScoWrapper: React.FC<ScoWrapperProps> = ({ courseId, scoId, scoUrl }) => {
   React.useEffect(() => {
     const authorizeScorm = async () => {
       try {
-        const context = await launchPlayer(courseId, scoId);
+        const context = await launchPlayer(`/scorm/api/${courseId}/${scoId}`, () => { console.log(111111)});
         setIsAuthorized(true);
         setError(null);
       } catch (err) {
