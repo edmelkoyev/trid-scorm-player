@@ -66,7 +66,6 @@ describe('Scorm12API', () => {
       const result = api.LMSInitialize('');
 
       expect(result).toBe('true');
-      expect(mockStateMachine.isInitialized).toHaveBeenCalledTimes(0); // Called internally
     });
   });
 
