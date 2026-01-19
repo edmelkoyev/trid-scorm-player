@@ -61,7 +61,7 @@ export class Scorm12API implements IScormAPI {
       return setValueResult ? "true" : "false";
     }
 
-    if ((setValueResult as ScormErrorCodeType) in ScormErrorCode) {
+    if (Object.values(ScormErrorCode).includes(setValueResult as ScormErrorCodeType)) {
       this.lastError = setValueResult;
       return "false";
     }
