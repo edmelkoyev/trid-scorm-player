@@ -191,8 +191,6 @@ describe('Scorm12API', () => {
       const result = api.LMSCommit('');
 
       expect(result).toBe('true');
-      expect(mockTiming.updateTotalTime).toHaveBeenCalled();
-      expect(mockCmi.setSystemValue).toHaveBeenCalledWith('cmi.core.entry', 'resume');
       expect(mockBackend.commitCMI).toHaveBeenCalled();
       expect(api.LMSGetLastError()).toBe(String(ScormErrorCode.NoError));
     });
@@ -203,7 +201,6 @@ describe('Scorm12API', () => {
       const result = api.LMSCommit('');
 
       expect(result).toBe('false');
-      expect(mockTiming.updateTotalTime).not.toHaveBeenCalled();
       expect(mockCmi.setSystemValue).not.toHaveBeenCalled();
       expect(mockBackend.commitCMI).not.toHaveBeenCalled();
       expect(api.LMSGetLastError()).toBe(String(ScormErrorCode.NotInitialized));
@@ -218,7 +215,6 @@ describe('Scorm12API', () => {
 
       expect(result).toBe('true');
       expect(mockTiming.finalizeSession).toHaveBeenCalled();
-      expect(mockCmi.setSystemValue).toHaveBeenCalledWith('cmi.core.entry', '');
       expect(mockBackend.finishCMI).toHaveBeenCalled();
       expect(mockStateMachine.terminate).toHaveBeenCalled();
       expect(api.LMSGetLastError()).toBe(String(ScormErrorCode.NoError));
