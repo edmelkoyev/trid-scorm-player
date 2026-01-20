@@ -5,8 +5,6 @@ import {ScormErrorCode, ScormErrorCodeType} from "../api/ScormErrorCodes";
 const cmiExcludeKeys = new Set([
     'cmi._version',
     'cmi.core.credit',
-    'cmi.core.entry',
-    'cmi.core.lesson_mode',
     'cmi.core.student_id',
     'cmi.core.student_name',
     'cmi.core.total_time',
