@@ -141,11 +141,10 @@ describe('Scorm12API', () => {
     it('should return empty string and set error code when CMI model returns an error', () => {
       mockStateMachine.isInitialized.mockReturnValue(true);
       mockCmi.getValue.mockReturnValue(ScormErrorCode.WriteOnly);
-
-      const result = api.LMSGetValue('cmi.core.student_id');
+      const result = api.LMSGetValue('cmi.core.exit');
 
       expect(result).toBe('');
-      expect(mockCmi.getValue).toHaveBeenCalledWith('cmi.core.student_id');
+      expect(mockCmi.getValue).toHaveBeenCalledWith('cmi.core.exit');
       expect(api.LMSGetLastError()).toBe(String(ScormErrorCode.WriteOnly));
     });
   });
