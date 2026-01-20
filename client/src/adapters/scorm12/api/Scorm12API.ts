@@ -64,6 +64,15 @@ export class Scorm12API implements IScormAPI {
     }
 
     const setValueResult = this.cmi.setValue(element, value);
+
+    if (element === 'cmi.core.exit') {
+      this.cmi.setSystemValue('cmi.core.entry', value === 'suspend' ? 'resume' : '');
+    }
+
+    if (element === 'cmi.core.lesson_status' && (value === 'completed' || value === 'passed')) {
+      this.cmi.setSystemValue('cmi.core.lesson_mode', 'review');
+    }
+
     if (typeof setValueResult === 'boolean') {
       this.lastError = setValueResult
         ? ScormErrorCode.NoError
@@ -94,6 +103,11 @@ export class Scorm12API implements IScormAPI {
     if (!this.stateMachine.isInitialized()) {
       this.lastError = ScormErrorCode.NotInitialized;
       return "false";
+    }
+
+    if (this.cmi.getValue('cmi.core.lesson_status') === 'not attempted') {
+      this.cmi.setSystemValue('cmi.core.lesson_status', 'completed');
+      this.cmi.setSystemValue('cmi.core.lesson_mode', 'review');
     }
 
     this.timing.finalizeSession();
