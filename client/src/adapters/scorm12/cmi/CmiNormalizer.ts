@@ -2,6 +2,7 @@ export function normalizeCmi(
   cmi: Record<string, string>
 ): Record<string, string> {
   return {
+    ...cmi,
     "cmi._version": cmi["cmi._version"] || "3.4",
     "cmi.core.student_id": cmi["cmi.core.student_id"] || "",
     "cmi.core.student_name": cmi["cmi.core.student_name"] || "",
@@ -16,7 +17,6 @@ export function normalizeCmi(
     "cmi.core.lesson_mode": cmi["cmi.core.lesson_mode"] || "normal",
     "cmi.core.exit": "",
     "cmi.suspend_data": cmi["cmi.suspend_data"] || "",
-    "cmi.launch_data": cmi["cmi.launch_data"] || "",
-    ...cmi
+    "cmi.launch_data": cmi["cmi.launch_data"] || ""
   };
 }
