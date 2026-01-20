@@ -1,6 +1,6 @@
-import { CmiValidator } from "./CmiValidator";
-import { CMI_CHILDREN_MAP } from "./CmiChildrenMap";
-import { ScormErrorCodeType, ScormErrorCode } from "../api/ScormErrorCodes";
+import {CmiValidator} from "./CmiValidator";
+import {CMI_CHILDREN_MAP} from "./CmiChildrenMap";
+import {ScormErrorCode, ScormErrorCodeType} from "../api/ScormErrorCodes";
 
 const cmiExcludeKeys = new Set([
     'cmi._version',
@@ -30,8 +30,11 @@ export class CmiModel {
     return children.join(",");
   }
 
-  getValue(key: string): string | undefined {
-    return this.data[key];
+  getValue(key: string): string | undefined | ScormErrorCodeType {
+    const validateResult = CmiValidator.validateGet(key);
+    if (validateResult === ScormErrorCode.NoError) return this.data[key];
+
+    return validateResult;
   }
 
   setValue(key: string, value: string): boolean | ScormErrorCodeType {
@@ -55,10 +58,9 @@ export class CmiModel {
   }
 
   snapshot(): Record<string, string> {
-    const dataToSend = Object.fromEntries(
+    return Object.fromEntries(
       Object.entries(this.data).filter(([key]) => !cmiExcludeKeys.has(key))
     );
-    return dataToSend;
   }
   
   async updateCmi(response: Response) {

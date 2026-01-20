@@ -71,6 +71,17 @@ describe('Scorm12API', () => {
 
       expect(result).toBe('true');
     });
+
+    it('should return false when already initialized', () => {
+      mockStateMachine.canInitialize.mockReturnValue(true);
+      mockStateMachine.isInitialized.mockReturnValue(true); // Уже инициализирован
+
+      const result = api.LMSInitialize('');
+
+      expect(result).toBe('false');
+      expect(mockStateMachine.initialize).not.toHaveBeenCalled();
+      expect(api.LMSGetLastError()).toBe(String(ScormErrorCode.GeneralException));
+    });
   });
 
   describe('LMSGetValue', () => {
@@ -125,6 +136,17 @@ describe('Scorm12API', () => {
       expect(result).toBe('');
       expect(mockCmi.getChildren).toHaveBeenCalledWith('cmi.core');
       expect(api.LMSGetLastError()).toBe(String(ScormErrorCode.NotImplementedError));
+    });
+
+    it('should return empty string and set error code when CMI model returns an error', () => {
+      mockStateMachine.isInitialized.mockReturnValue(true);
+      mockCmi.getValue.mockReturnValue(ScormErrorCode.WriteOnly);
+
+      const result = api.LMSGetValue('cmi.core.student_id');
+
+      expect(result).toBe('');
+      expect(mockCmi.getValue).toHaveBeenCalledWith('cmi.core.student_id');
+      expect(api.LMSGetLastError()).toBe(String(ScormErrorCode.WriteOnly));
     });
   });
 
