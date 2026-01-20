@@ -12,7 +12,7 @@ describe("TimingController", () => {
   beforeEach(() => {
     mockCmi = new CmiModel({'cmi.core.student_id': 'st123'}) as jest.Mocked<CmiModel>;
     timingController = new TimingController(mockCmi);
-    
+
     jest.clearAllMocks();
   });
 
@@ -38,11 +38,11 @@ describe("TimingController", () => {
       const startTime = 1000000;
       const endTime = 1005000;
       const sessionDurationMs = endTime - startTime;
-      
+
       jest.spyOn(Date, "now")
         .mockReturnValueOnce(startTime)
         .mockReturnValue(endTime);
-      
+
       mockCmi.getValue.mockReturnValue(undefined);
       (formatScormTime as jest.Mock).mockReturnValue("FORMATTED_5_SEC");
 
@@ -60,11 +60,11 @@ describe("TimingController", () => {
       // Arrange
       const startTime = 1000000;
       const endTime = 1005000;
-      
+
       jest.spyOn(Date, "now")
         .mockReturnValueOnce(startTime)
         .mockReturnValue(endTime);
-      
+
       mockCmi.getValue.mockReturnValue("FORMATTED_5_SEC");
 
       // Act
@@ -81,7 +81,7 @@ describe("TimingController", () => {
       // Arrange
       const mockTime = 1000000;
       jest.spyOn(Date, "now").mockReturnValue(mockTime);
-      
+
       mockCmi.getValue.mockReturnValue(undefined);
       (formatScormTime as jest.Mock).mockReturnValue("FORMATTED_0_SEC");
 
@@ -98,11 +98,11 @@ describe("TimingController", () => {
       // Arrange
       const startTime = 1005000;
       const endTime = 1000000; // end time before start time
-      
+
       jest.spyOn(Date, "now")
         .mockReturnValueOnce(startTime)
         .mockReturnValue(endTime);
-      
+
       mockCmi.getValue.mockReturnValue(undefined);
 
       // Act

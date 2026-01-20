@@ -20,6 +20,10 @@ export class Scorm12API implements IScormAPI {
       this.lastError = ScormErrorCode.InvalidArgument;
       return "false";
     }
+    if (this.stateMachine.isInitialized()) {
+      this.lastError = ScormErrorCode.GeneralException;
+      return "false";
+    }
 
     this.stateMachine.initialize();
     this.timing.startSession();
@@ -42,9 +46,15 @@ export class Scorm12API implements IScormAPI {
       return children;
     }
 
-    const value = this.cmi.getValue(element);
+    const getValueResult = this.cmi.getValue(element);
+
+    if (typeof getValueResult !== 'string' && getValueResult != undefined) {
+      this.lastError = getValueResult as ScormErrorCodeType;
+      return "";
+    }
+
     this.lastError = ScormErrorCode.NoError;
-    return value ?? "";
+    return getValueResult || "";
   }
 
   LMSSetValue(element: string, value: string): string {
@@ -74,7 +84,7 @@ export class Scorm12API implements IScormAPI {
       this.lastError = ScormErrorCode.NotInitialized;
       return "false";
     }
-  
+
     this.backend.commitCMI(this.cmi);
     this.lastError = ScormErrorCode.NoError;
     return "true";
