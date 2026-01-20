@@ -1,3 +1,5 @@
+import {CmiModel} from "../cmi/CmiModel";
+
 export class BackendClient {
   private cmiDataUrl: string;
   private lmsCommitUrl: string;
@@ -12,30 +14,30 @@ export class BackendClient {
     this.updateProgress = updateProgress;
   }
 
-  async commitCMI(cmi: Record<string, string>) { 
-    await fetch(this.lmsCommitUrl, {
+  async commitCMI(cmi: CmiModel) { 
+    await cmi.updateCmi(await fetch(this.lmsCommitUrl, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ elements: {...cmi}})
-    });
+      body: JSON.stringify({ elements: {...cmi.snapshot()}})
+    }));
     this.updateProgress();
   }
 
-  async finishCMI(cmi: Record<string, string>) { 
-    await fetch(this.lmsFinish, {
+  async finishCMI(cmi: CmiModel) { 
+    await cmi.updateCmi(await fetch(this.lmsFinish, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ elements: {...cmi}})
-    });
+      body: JSON.stringify({ elements: {...cmi.snapshot()}})
+    }));
     this.updateProgress();
   }
 
-  async saveCMI(cmi: Record<string, string>) {
-    await fetch(this.cmiDataUrl, {
+  async saveCMI(cmi: CmiModel) {
+    await cmi.updateCmi(await fetch(this.cmiDataUrl, {
       method: "patch",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ elements: {...cmi}})
-    });
+      body: JSON.stringify({ elements: {...cmi.snapshot()}})
+    }));
     this.updateProgress();
   }
 }
