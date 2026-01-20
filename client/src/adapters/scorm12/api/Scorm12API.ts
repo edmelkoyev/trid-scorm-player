@@ -75,7 +75,7 @@ export class Scorm12API implements IScormAPI {
       return "false";
     }
   
-    this.backend.commitCMI(this.cmi.snapshot());
+    this.backend.commitCMI(this.cmi);
     this.lastError = ScormErrorCode.NoError;
     return "true";
   }
@@ -87,7 +87,7 @@ export class Scorm12API implements IScormAPI {
     }
 
     this.timing.finalizeSession();
-    this.backend.finishCMI(this.cmi.snapshot());
+    this.backend.finishCMI(this.cmi);
     this.stateMachine.terminate();
     this.lastError = ScormErrorCode.NoError;
     return "true";

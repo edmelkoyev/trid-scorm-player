@@ -60,6 +60,10 @@ export class CmiModel {
     );
     return dataToSend;
   }
-
+  
+  async updateCmi(response: Response) {
+    const json = await response.json();
+    this.data = { ...this.data, ...json.elements};
+  }
 
 }
