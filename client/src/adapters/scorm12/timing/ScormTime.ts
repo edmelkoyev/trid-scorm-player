@@ -1,17 +1,27 @@
-export function parseScormTime(value = "00:00:00"): number {
-  const [h, m, s] = value.split(":");
-  return (
-    Number(h) * 3600000 +
-    Number(m) * 60000 +
-    Number(parseFloat(s)) * 1000
-  );
-}
-
 export function formatScormTime(ms: number): string {
-  const totalSeconds = Math.floor(ms / 1000);
-  const h = Math.floor(totalSeconds / 3600);
-  const m = Math.floor((totalSeconds % 3600) / 60);
-  const s = totalSeconds % 60;
+    if (typeof ms !== 'number' || ms < 0 || !isFinite(ms)) {
+        throw new Error('Milliseconds must be a non-negative finite number');
+    }
+    const roundedMs = Math.round(ms);
+    
+    const totalSeconds = Math.floor(roundedMs / 1000);
+    const milliseconds = roundedMs % 1000;
+    
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
 
-  return `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+    const hoursStr = String(hours).padStart(4, '0');
+    const minutesStr = String(minutes).padStart(2, '0');
+    const secondsStr = String(seconds).padStart(2, '0');
+    
+    if (milliseconds > 0) {
+        let msStr = String(milliseconds).padStart(3, '0');
+        while (msStr.length > 1 && msStr.endsWith('0')) {
+            msStr = msStr.slice(0, -1);
+        }
+        return `${hoursStr}:${minutesStr}:${secondsStr}.${msStr}`;
+    } else {
+        return `${hoursStr}:${minutesStr}:${secondsStr}`;
+    }
 }
