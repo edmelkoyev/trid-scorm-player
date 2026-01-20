@@ -8,7 +8,7 @@ export function normalizeCmi(
     "cmi.core.lesson_location": cmi["cmi.core.lesson_location"] || "",
     "cmi.core.credit": cmi["cmi.core.credit"] || "credit",
     "cmi.core.lesson_status": cmi["cmi.core.lesson_status"] || "not attempted",
-    "cmi.core.entry": cmi["cmi.core.entry"] || "ab-initio",
+    "cmi.core.entry": cmi["cmi.core.entry"] ?? "ab-initio",
     "cmi.core.score.raw": cmi["cmi.core.score.raw"] || "",
     "cmi.core.score.max": cmi["cmi.core.score.max"] || "",
     "cmi.core.score.min": cmi["cmi.core.score.min"] || "",
