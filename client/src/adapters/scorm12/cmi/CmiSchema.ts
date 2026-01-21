@@ -26,6 +26,42 @@ export interface CmiElementSchema {
 }
 
 export const CMI_SCHEMA: Record<string, CmiElementSchema> = {
+  "cmi._version": {
+    readOnly: {
+      value: true,
+      error: ScormErrorCode.ReadOnly
+    }
+  },
+  "cmi.core._children": {
+    readOnly: {
+      value: true,
+      error: ScormErrorCode.ReadOnly
+    }
+  },
+  "cmi.core.student_id": {
+    readOnly: {
+      value: true,
+      error: ScormErrorCode.ReadOnly
+    }
+  },
+  "cmi.core.student_name": {
+    readOnly: {
+      value: true,
+      error: ScormErrorCode.ReadOnly
+    }
+  },
+  "cmi.core.lesson_location":{
+    maxLength: {
+      value: 255,
+      error: ScormErrorCode.IncorrectDataType
+    },
+  },
+  "cmi.core.credit": {
+    readOnly: {
+      value: true,
+      error: ScormErrorCode.ReadOnly
+    }
+  },
   "cmi.core.lesson_status": {
     enum: {
       value: [
@@ -39,6 +75,18 @@ export const CMI_SCHEMA: Record<string, CmiElementSchema> = {
       error: ScormErrorCode.ElementNotAnArray
     }
   },
+  "cmi.core.entry": {
+    readOnly: {
+      value: true,
+      error: ScormErrorCode.ReadOnly
+    }
+  },
+  "cmi.core.score._children": {
+    readOnly: {
+      value: true,
+      error: ScormErrorCode.ReadOnly
+    }
+  },
   "cmi.core.score.raw": {
     minMax: {
       min: 0,
@@ -46,13 +94,27 @@ export const CMI_SCHEMA: Record<string, CmiElementSchema> = {
       error: ScormErrorCode.IncorrectDataType
     }
   },
-  "cmi.suspend_data": {
-    maxLength: {
-      value: 4096,
+  "cmi.core.score.max": {
+    minMax: {
+      min: 0,
+      max: 100,
       error: ScormErrorCode.IncorrectDataType
-    },
+    }
   },
-  "cmi.core.entry": {
+  "cmi.core.score.min": {
+    minMax: {
+      min: 0,
+      max: 100,
+      error: ScormErrorCode.IncorrectDataType
+    }
+  },
+  "cmi.core.total_time": {
+    readOnly: {
+      value: true,
+      error: ScormErrorCode.ReadOnly
+    }
+  },
+  "cmi.core.lesson_mode": {
     readOnly: {
       value: true,
       error: ScormErrorCode.ReadOnly
@@ -70,16 +132,16 @@ export const CMI_SCHEMA: Record<string, CmiElementSchema> = {
       error: ScormErrorCode.WriteOnly
     }
   },
-  "cmi.core.total_time": {
+  "cmi.suspend_data": {
+    maxLength: {
+      value: 4096,
+      error: ScormErrorCode.IncorrectDataType
+    },
+  },
+  "cmi.launch_data": {
     readOnly: {
       value: true,
       error: ScormErrorCode.ReadOnly
     }
-  },
-  "cmi.lesson_location": {
-    maxLength: {
-      value: 255,
-      error: ScormErrorCode.IncorrectDataType
-    },
   }
 };
