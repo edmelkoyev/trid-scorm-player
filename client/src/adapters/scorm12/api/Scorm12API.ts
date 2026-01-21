@@ -15,7 +15,11 @@ export class Scorm12API implements IScormAPI {
     private backend: BackendClient
   ) {}
 
-  LMSInitialize(_: string): string {
+  LMSInitialize(param: string): string {
+    if (param === undefined || param !== ""){
+      this.lastError = ScormErrorCode.InvalidArgument;
+      return "false";
+    }
     if (!this.stateMachine.canInitialize()) {
       this.lastError = ScormErrorCode.InvalidArgument;
       return "false";

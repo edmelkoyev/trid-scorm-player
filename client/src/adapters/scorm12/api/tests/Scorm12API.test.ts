@@ -52,6 +52,27 @@ describe('Scorm12API', () => {
       expect(api.LMSGetLastError()).toBe(String(ScormErrorCode.NoError));
     });
 
+    it('should return false when is called with incorrect parameter', () => {
+      mockStateMachine.canInitialize.mockReturnValue(true);
+
+      const result = api.LMSInitialize('init');
+
+      expect(result).toBe('false');
+      expect(mockStateMachine.initialize).not.toHaveBeenCalled();
+      expect(mockTiming.startSession).not.toHaveBeenCalled();
+      expect(api.LMSGetLastError()).toBe(String(ScormErrorCode.InvalidArgument));
+    });
+
+    it('should return false when is called with no parameter', () => {
+      mockStateMachine.canInitialize.mockReturnValue(true);
+
+      const result = api.LMSInitialize();
+
+      expect(result).toBe('false');
+      expect(mockStateMachine.initialize).not.toHaveBeenCalled();
+      expect(mockTiming.startSession).not.toHaveBeenCalled();
+      expect(api.LMSGetLastError()).toBe(String(ScormErrorCode.InvalidArgument));
+    });
     it('should return false when state machine does not allow initialization', () => {
       mockStateMachine.canInitialize.mockReturnValue(false);
 
