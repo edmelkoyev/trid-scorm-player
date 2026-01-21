@@ -37,12 +37,12 @@ describe('CmiValidator', () => {
     });
 
     it('should return true for valid inputs', () => {
-      const key = 'cmi.lesson_location';
+      const key = 'cmi.core.lesson_location';
       expect(CmiValidator.validateSet(key, 'valid_location')).toBe(true);
     });
 
     it('should return IncorrectDataType error for invalid data types', () => {
-      const key = 'cmi.lesson_location';
+      const key = 'cmi.core.lesson_location';
 
       // Test undefined value
       expect(CmiValidator.validateSet(key, undefined as any)).toBe(ScormErrorCode.IncorrectDataType);
