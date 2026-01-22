@@ -25,6 +25,7 @@ export class PlayerContext {
   }
 
   escape() {
+    this.timing.finalizeSession();
     this.backend.escapeCMI(this.cmi);
   }
 }
