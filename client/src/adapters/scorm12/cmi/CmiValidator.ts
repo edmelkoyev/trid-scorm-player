@@ -5,8 +5,7 @@ export class CmiValidator {
   static validateSet(key: string, value: string): boolean | ScormErrorCodeType {
     if (typeof value == "undefined"
       || value == null
-      || typeof value == "object"
-      || typeof value == "function") {
+      || typeof value !== "string") {
         return ScormErrorCode.IncorrectDataType;
     }
 

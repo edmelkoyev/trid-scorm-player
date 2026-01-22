@@ -72,9 +72,9 @@
                 if (SCORM.get("cmi.core.score.raw")) {
                     scoScoreRaw = Number(SCORM.get("cmi.core.score.raw"));
                 } else {
-                    SCORM.set('cmi.core.score.min', 0);
-                    SCORM.set('cmi.core.score.max', 100);
-                    SCORM.set('cmi.core.score.raw', 0);
+                    SCORM.set('cmi.core.score.min', '0');
+                    SCORM.set('cmi.core.score.max', '100');
+                    SCORM.set('cmi.core.score.raw', '0');
                 }
                 
                 enableButton('btnNextStepElId', true);
@@ -88,7 +88,7 @@
             const nextRaw = scoScoreRaw < 100 ? scoScoreRaw + SCORE_INCREMENT : scoScoreRaw;
             const lessonStatus = nextRaw === 100 ? 'completed' : 'incomplete';
 
-            SCORM.set('cmi.core.score.raw', nextRaw);
+            SCORM.set('cmi.core.score.raw', nextRaw.toString());
             SCORM.set('cmi.core.lesson_status', lessonStatus);
             SCORM.commit();
 
