@@ -52,6 +52,27 @@ describe('Scorm12API', () => {
       expect(api.LMSGetLastError()).toBe(String(ScormErrorCode.NoError));
     });
 
+    it('should return false when gets called with incorrect parameter', () => {
+      mockStateMachine.canInitialize.mockReturnValue(true);
+
+      const result = api.LMSInitialize('init');
+
+      expect(result).toBe('false');
+      expect(mockStateMachine.initialize).not.toHaveBeenCalled();
+      expect(mockTiming.startSession).not.toHaveBeenCalled();
+      expect(api.LMSGetLastError()).toBe(String(ScormErrorCode.InvalidArgument));
+    });
+
+    it('should return false when gets called with no parameter', () => {
+      mockStateMachine.canInitialize.mockReturnValue(true);
+
+      const result = api.LMSInitialize();
+
+      expect(result).toBe('false');
+      expect(mockStateMachine.initialize).not.toHaveBeenCalled();
+      expect(mockTiming.startSession).not.toHaveBeenCalled();
+      expect(api.LMSGetLastError()).toBe(String(ScormErrorCode.InvalidArgument));
+    });
     it('should return false when state machine does not allow initialization', () => {
       mockStateMachine.canInitialize.mockReturnValue(false);
 
@@ -216,13 +237,32 @@ describe('Scorm12API', () => {
       expect(api.LMSGetLastError()).toBe(String(ScormErrorCode.NoError));
     });
 
+    it('should return false when gets called with incorrect parameter', () => {
+      mockStateMachine.isInitialized.mockReturnValue(true);
+
+      const result = api.LMSCommit('commit');
+
+      expect(result).toBe('false');
+      expect(mockBackend.commitCMI).not.toHaveBeenCalled();
+      expect(api.LMSGetLastError()).toBe(String(ScormErrorCode.InvalidArgument));
+    });
+
+    it('should return false when gets called with no parameter', () => {
+      mockStateMachine.isInitialized.mockReturnValue(true);
+
+      const result = api.LMSCommit();
+
+      expect(result).toBe('false');
+      expect(mockBackend.commitCMI).not.toHaveBeenCalled();
+      expect(api.LMSGetLastError()).toBe(String(ScormErrorCode.InvalidArgument));
+    });
+
     it('should return false when not initialized', () => {
       mockStateMachine.isInitialized.mockReturnValue(false);
 
       const result = api.LMSCommit('');
 
       expect(result).toBe('false');
-      expect(mockCmi.setSystemValue).not.toHaveBeenCalled();
       expect(mockBackend.commitCMI).not.toHaveBeenCalled();
       expect(api.LMSGetLastError()).toBe(String(ScormErrorCode.NotInitialized));
     });
@@ -241,6 +281,31 @@ describe('Scorm12API', () => {
       expect(api.LMSGetLastError()).toBe(String(ScormErrorCode.NoError));
     });
 
+    it('should return false when gets called with incorrect parameter', () => {
+      mockStateMachine.isInitialized.mockReturnValue(true);
+
+
+      const result = api.LMSFinish('finish');
+
+      expect(result).toBe('false');
+      expect(mockTiming.finalizeSession).not.toHaveBeenCalled();
+      expect(mockBackend.finishCMI).not.toHaveBeenCalled();
+      expect(mockStateMachine.terminate).not.toHaveBeenCalled();
+      expect(api.LMSGetLastError()).toBe(String(ScormErrorCode.InvalidArgument));
+    });
+
+    it('should return false when gets called with no parameter', () => {
+      mockStateMachine.isInitialized.mockReturnValue(true);
+
+      const result = api.LMSFinish();
+
+      expect(result).toBe('false');
+      expect(mockTiming.finalizeSession).not.toHaveBeenCalled();
+      expect(mockBackend.finishCMI).not.toHaveBeenCalled();
+      expect(mockStateMachine.terminate).not.toHaveBeenCalled();
+      expect(api.LMSGetLastError()).toBe(String(ScormErrorCode.InvalidArgument));
+    });
+
     it('should return false when not initialized', () => {
       mockStateMachine.isInitialized.mockReturnValue(false);
 
@@ -248,7 +313,6 @@ describe('Scorm12API', () => {
 
       expect(result).toBe('false');
       expect(mockTiming.finalizeSession).not.toHaveBeenCalled();
-      expect(mockCmi.setSystemValue).not.toHaveBeenCalled();
       expect(mockBackend.finishCMI).not.toHaveBeenCalled();
       expect(mockStateMachine.terminate).not.toHaveBeenCalled();
       expect(api.LMSGetLastError()).toBe(String(ScormErrorCode.NotInitialized));

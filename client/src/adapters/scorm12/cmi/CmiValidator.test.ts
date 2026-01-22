@@ -1,5 +1,5 @@
-import { ScormErrorCode } from "../../api/ScormErrorCodes";
-import { CmiValidator } from "../CmiValidator";
+import { ScormErrorCode } from "../api/ScormErrorCodes";
+import { CmiValidator } from "./CmiValidator";
 
 describe('CmiValidator', () => {
 
@@ -58,6 +58,9 @@ describe('CmiValidator', () => {
 
       // Test function value
       expect(CmiValidator.validateSet(key, (() => {}) as any)).toBe(ScormErrorCode.IncorrectDataType);
+
+      // Test number value
+      expect(CmiValidator.validateSet(key, Number(123) as any)).toBe(ScormErrorCode.IncorrectDataType);
     });
   });
 
