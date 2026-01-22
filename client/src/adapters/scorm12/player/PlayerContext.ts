@@ -11,7 +11,7 @@ export class PlayerContext {
   public backend: BackendClient;
   public api: Scorm12API;
 
-  constructor(cmiData: Record<string, string>, cmiBaseUrl: string, updateProgress: () => void) {
+  constructor(cmiData: Record<string, string>, cmiBaseUrl: string, updateProgress: (finished: boolean) => void) {
     this.cmi = new CmiModel(cmiData);
     this.stateMachine = new PlayerStateMachine();
     this.timing = new TimingController(this.cmi);
