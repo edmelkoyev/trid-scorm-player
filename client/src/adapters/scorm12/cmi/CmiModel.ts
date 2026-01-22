@@ -37,8 +37,9 @@ export class CmiModel {
     return validateResult;
   }
 
-  setValue(key: string, value: string): boolean | ScormErrorCodeType {
-    const validateResult = CmiValidator.validateSet(key, value);
+  setValue(key: string, value: string | number): boolean | ScormErrorCodeType {
+    const valueNorm = typeof value === 'number'? value.toString() : value;
+    const validateResult = CmiValidator.validateSet(key, valueNorm);
     if (typeof validateResult === 'boolean') {
       if (!validateResult) {
         return false;
@@ -48,12 +49,7 @@ export class CmiModel {
       return validateResult;
     }
 
-    this.data[key] = value;
-    return true;
-  }
-
-  setSystemValue(key: string, value: string): boolean {
-    this.data[key] = value;
+    this.data[key] = valueNorm;
     return true;
   }
 
@@ -67,5 +63,4 @@ export class CmiModel {
     const json = await response.json();
     this.data = { ...this.data, ...json.elements};
   }
-
 }

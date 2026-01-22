@@ -1,5 +1,5 @@
-import { ScormErrorCode } from "../../api/ScormErrorCodes";
-import { CmiValidator } from "../CmiValidator";
+import { ScormErrorCode } from "../api/ScormErrorCodes";
+import { CmiValidator } from "./CmiValidator";
 
 describe('CmiValidator', () => {
 

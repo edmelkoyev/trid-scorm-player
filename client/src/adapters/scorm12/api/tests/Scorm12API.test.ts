@@ -243,7 +243,6 @@ describe('Scorm12API', () => {
       const result = api.LMSCommit('commit');
 
       expect(result).toBe('false');
-      expect(mockCmi.setSystemValue).not.toHaveBeenCalled();
       expect(mockBackend.commitCMI).not.toHaveBeenCalled();
       expect(api.LMSGetLastError()).toBe(String(ScormErrorCode.InvalidArgument));
     });
@@ -254,7 +253,6 @@ describe('Scorm12API', () => {
       const result = api.LMSCommit();
 
       expect(result).toBe('false');
-      expect(mockCmi.setSystemValue).not.toHaveBeenCalled();
       expect(mockBackend.commitCMI).not.toHaveBeenCalled();
       expect(api.LMSGetLastError()).toBe(String(ScormErrorCode.InvalidArgument));
     });
@@ -265,7 +263,6 @@ describe('Scorm12API', () => {
       const result = api.LMSCommit('');
 
       expect(result).toBe('false');
-      expect(mockCmi.setSystemValue).not.toHaveBeenCalled();
       expect(mockBackend.commitCMI).not.toHaveBeenCalled();
       expect(api.LMSGetLastError()).toBe(String(ScormErrorCode.NotInitialized));
     });
@@ -292,7 +289,6 @@ describe('Scorm12API', () => {
 
       expect(result).toBe('false');
       expect(mockTiming.finalizeSession).not.toHaveBeenCalled();
-      expect(mockCmi.setSystemValue).not.toHaveBeenCalled();
       expect(mockBackend.finishCMI).not.toHaveBeenCalled();
       expect(mockStateMachine.terminate).not.toHaveBeenCalled();
       expect(api.LMSGetLastError()).toBe(String(ScormErrorCode.InvalidArgument));
@@ -305,7 +301,6 @@ describe('Scorm12API', () => {
 
       expect(result).toBe('false');
       expect(mockTiming.finalizeSession).not.toHaveBeenCalled();
-      expect(mockCmi.setSystemValue).not.toHaveBeenCalled();
       expect(mockBackend.finishCMI).not.toHaveBeenCalled();
       expect(mockStateMachine.terminate).not.toHaveBeenCalled();
       expect(api.LMSGetLastError()).toBe(String(ScormErrorCode.InvalidArgument));
@@ -318,7 +313,6 @@ describe('Scorm12API', () => {
 
       expect(result).toBe('false');
       expect(mockTiming.finalizeSession).not.toHaveBeenCalled();
-      expect(mockCmi.setSystemValue).not.toHaveBeenCalled();
       expect(mockBackend.finishCMI).not.toHaveBeenCalled();
       expect(mockStateMachine.terminate).not.toHaveBeenCalled();
       expect(api.LMSGetLastError()).toBe(String(ScormErrorCode.NotInitialized));
