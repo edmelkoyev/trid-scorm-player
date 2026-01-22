@@ -23,4 +23,8 @@ export class PlayerContext {
     // Expose globally for SCO iframe
     (window as any).API = this.api;
   }
+
+  escape() {
+    this.backend.escapeCMI(this.cmi);
+  }
 }

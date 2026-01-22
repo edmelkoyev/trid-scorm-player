@@ -40,4 +40,11 @@ export class BackendClient {
     }));
     this.updateProgress();
   }
+
+  escapeCMI(cmi: CmiModel) {
+    navigator.sendBeacon(
+      this.lmsFinish,
+      new Blob([JSON.stringify({ elements: {...cmi.snapshot()}})], { type: 'application/json' })
+    );
+  }
 }
