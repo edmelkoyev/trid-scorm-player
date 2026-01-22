@@ -25,7 +25,9 @@ export class PlayerContext {
   }
 
   escape() {
-    this.timing.finalizeSession();
-    this.backend.escapeCMI(this.cmi);
+    if (this.stateMachine.isInitialized()) {
+      this.timing.finalizeSession();
+      this.backend.escapeCMI(this.cmi);
+    }
   }
 }
