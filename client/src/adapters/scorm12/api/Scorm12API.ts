@@ -15,7 +15,7 @@ export class Scorm12API implements IScormAPI {
     private backend: BackendClient
   ) {}
 
-  LMSInitialize(param: string): string {
+  LMSInitialize(param?: string): string {
     if (param === undefined || param !== ""){
       this.lastError = ScormErrorCode.InvalidArgument;
       return "false";
@@ -83,7 +83,7 @@ export class Scorm12API implements IScormAPI {
     return "false";
   }
 
-  LMSCommit(param: string): string {
+  LMSCommit(param?: string): string {
     if (param === undefined || param !== ""){
       this.lastError = ScormErrorCode.InvalidArgument;
       return "false";
@@ -98,7 +98,7 @@ export class Scorm12API implements IScormAPI {
     return "true";
   }
 
-  LMSFinish(param: string): string {
+  LMSFinish(param?: string): string {
     if (param === undefined || param !== ""){
       this.lastError = ScormErrorCode.InvalidArgument;
       return "false";
