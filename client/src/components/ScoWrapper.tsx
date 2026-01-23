@@ -1,5 +1,5 @@
 import React from "react";
-import { launchPlayer } from "../adapters/scorm12/player/PlayerBootstrap";
+import { launchPlayer } from "../adapters/scorm12";
 
 interface ScoWrapperProps {
   courseId: string,
@@ -8,10 +8,14 @@ interface ScoWrapperProps {
 }
 
 const ScoWrapper: React.FC<ScoWrapperProps> = ({ courseId, scoId, scoUrl }) => {
+  const hasLaunched = React.useRef(false);
   const [isAuthorized, setIsAuthorized] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
 
   React.useEffect(() => {
+    if (hasLaunched.current) return;
+    hasLaunched.current = true;
+  
     const authorizeScorm = async () => {
       try {
         const context = await launchPlayer(`/scorm/api/${courseId}/${scoId}`, () => { console.log(111111)});
