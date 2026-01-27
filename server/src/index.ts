@@ -68,6 +68,10 @@ app.post('/scorm/api/crs123/sco456/LMSFinish', (req, res) => {
   res.json(cmiPack);
 });
 
+app.post('/scorm/api/crs123/sco456/LMSInitialize', (req, res) => {
+  res.type('text/plain; charset=utf-8').send('true');
+});
+
 
 // Serve static files in production
 if (process.env.NODE_ENV === 'production') {
