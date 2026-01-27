@@ -11,7 +11,7 @@ export class PlayerContext {
   public backend: BackendClient;
   public api: Scorm12API;
 
-  constructor(cmiData: Record<string, string>, cmiBaseUrl: string, updateProgress: () => void) {
+  constructor(cmiData: Record<string, string>, cmiBaseUrl: string, updateProgress: (finished: boolean) => void) {
     this.cmi = new CmiModel(cmiData);
     this.stateMachine = new PlayerStateMachine();
     this.timing = new TimingController(this.cmi);
@@ -22,5 +22,12 @@ export class PlayerContext {
     this.stateMachine.setReady();
     // Expose globally for SCO iframe
     (window as any).API = this.api;
+  }
+
+  escape() {
+    if (this.stateMachine.isInitialized()) {
+      this.timing.finalizeSession();
+      this.backend.escapeCMI(this.cmi);
+    }
   }
 }

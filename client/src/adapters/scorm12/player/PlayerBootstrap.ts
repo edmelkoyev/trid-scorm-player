@@ -12,7 +12,7 @@ import { PlayerContext } from "./PlayerContext";
  * @param cmiBaseUrl SCORM API URL
  * @param updateProgress callback to trigger on possible progress changes
  */
-export async function launchPlayer(cmiBaseUrl: string, updateProgress: () => void) {
+export async function launchPlayer(cmiBaseUrl: string, updateProgress: (finished: boolean) => void) {
   try {
     // 1 fetch POST to /LMSInitialize
     const initRes = await fetch(`${cmiBaseUrl}/LMSInitialize`, {method: "POST"});
