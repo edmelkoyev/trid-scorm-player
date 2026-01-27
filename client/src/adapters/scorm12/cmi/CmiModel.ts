@@ -59,7 +59,8 @@ export class CmiModel {
     );
   }
   
-  async updateCmi(updatedCmi: Record<string, string>) {
-    this.data = { ...this.data, ...updatedCmi};
+  updateCmi(cmiElements: Record<string, string>) {
+    debugger
+    this.data = { ...this.data, ...cmiElements};
   }
 }
