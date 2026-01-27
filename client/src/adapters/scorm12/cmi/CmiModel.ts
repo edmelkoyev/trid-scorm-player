@@ -59,8 +59,7 @@ export class CmiModel {
     );
   }
   
-  async updateCmi(response: Response) {
-    const json = await response.json();
-    this.data = { ...this.data, ...json.elements};
+  async updateCmi(updatedCmi: Record<string, string>) {
+    this.data = { ...this.data, ...updatedCmi};
   }
 }

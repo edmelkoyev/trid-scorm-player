@@ -93,7 +93,19 @@ export class Scorm12API implements IScormAPI {
       return "false";
     }
 
-    this.backend.commitCMI(this.cmi);
+    (async () => {
+      try {
+          const success = await this.backend.commitCMI(this.cmi);
+          if (!success) {
+              console.error("LMSCommit backend commit failed");
+              this.lastError = ScormErrorCode.GeneralException;
+          }
+      } catch (err) {
+          console.error("LMSCommit backend error", err);
+          this.lastError = ScormErrorCode.GeneralException;
+      }
+    })();
+
     this.lastError = ScormErrorCode.NoError;
     return "true";
   }
@@ -109,7 +121,18 @@ export class Scorm12API implements IScormAPI {
     }
 
     this.timing.finalizeSession();
-    this.backend.finishCMI(this.cmi);
+    (async () => {
+      try {
+          const success = await this.backend.finishCMI(this.cmi);
+          if (!success) {
+              console.error("LMSFinish backend commit failed");
+              this.lastError = ScormErrorCode.GeneralException;
+          }
+      } catch (err) {
+          console.error("LMSFinish backend error", err);
+          this.lastError = ScormErrorCode.GeneralException;
+      }
+    })();
     this.stateMachine.terminate();
     this.lastError = ScormErrorCode.NoError;
     return "true";

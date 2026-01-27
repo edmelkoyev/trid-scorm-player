@@ -1,4 +1,4 @@
-import {CmiModel} from "../cmi/CmiModel";
+import { CmiModel } from "../cmi/CmiModel";
 
 export class BackendClient {
   private cmiDataUrl: string;
@@ -14,30 +14,69 @@ export class BackendClient {
     this.updateProgress = updateProgress;
   }
 
-  async commitCMI(cmi: CmiModel) { 
-    await cmi.updateCmi(await fetch(this.lmsCommitUrl, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ elements: {...cmi.snapshot()}})
-    }));
-    this.updateProgress();
+  async commitCMI(cmi: CmiModel): Promise<boolean> {
+    try {
+      const res = await fetch(this.lmsCommitUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ elements: { ...cmi.snapshot() } })
+      });
+
+      if (!res.ok) return false;
+
+      const { elements } = await res.json();
+      if (!elements) return false;
+
+      cmi.updateCmi(elements);
+      this.updateProgress();
+
+      return true;
+    } catch {
+      return false;
+    }
   }
 
-  async finishCMI(cmi: CmiModel) { 
-    await cmi.updateCmi(await fetch(this.lmsFinish, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ elements: {...cmi.snapshot()}})
-    }));
-    this.updateProgress();
+  async finishCMI(cmi: CmiModel): Promise<boolean> {
+    try {
+      const res = await fetch(this.lmsFinish, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ elements: { ...cmi.snapshot() } })
+      });
+
+      if (!res.ok) return false;
+
+      const { elements } = await res.json();
+      if (!elements) return false;
+
+      cmi.updateCmi(elements);
+      this.updateProgress();
+
+      return true;
+    } catch {
+      return false;
+    }
   }
 
-  async saveCMI(cmi: CmiModel) {
-    await cmi.updateCmi(await fetch(this.cmiDataUrl, {
-      method: "patch",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ elements: {...cmi.snapshot()}})
-    }));
-    this.updateProgress();
+    async saveCMI(cmi: CmiModel): Promise<boolean> {
+    try {
+      const res = await fetch(this.cmiDataUrl, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ elements: { ...cmi.snapshot() } })
+      });
+
+      if (!res.ok) return false;
+
+      const { elements } = await res.json();
+      if (!elements) return false;
+
+      cmi.updateCmi(elements);
+      this.updateProgress();
+
+      return true;
+    } catch {
+      return false;
+    }
   }
 }
