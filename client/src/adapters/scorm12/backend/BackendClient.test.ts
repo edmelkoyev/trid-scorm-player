@@ -1,21 +1,23 @@
-import { BackendClient } from "./BackendClient";
-import { CmiModel } from "../cmi/CmiModel";
+import { BackendClient } from './BackendClient';
+import { CmiModel } from '../cmi/CmiModel';
 
-const mockCmiSnapshot = { key1: "value1", key2: "value2" };
-const mockUpdatedElements = { updated: "true", test: "true" };
+
+const mockCmiSnapshot = { key1: 'value1', key2: 'value2' };
+const mockUpdatedElements = { updated: 'true', test: 'true' };
 
 class MockCmiModel {
   snapshot = jest.fn(() => mockCmiSnapshot);
+
   updateCmi = jest.fn();
 }
 
-describe("BackendClient", () => {
+describe('BackendClient', () => {
   let backendClient: BackendClient;
   let mockUpdateProgress: jest.Mock;
 
   beforeEach(() => {
     mockUpdateProgress = jest.fn();
-    backendClient = new BackendClient("http://test-url.com/ctx001", mockUpdateProgress);
+    backendClient = new BackendClient('http://test-url.com/ctx001', mockUpdateProgress);
     global.fetch = jest.fn();
   });
 
@@ -30,8 +32,8 @@ describe("BackendClient", () => {
     });
   };
 
-  describe("commitCMI", () => {
-    it("should commit CMI successfully", async () => {
+  describe('commitCMI', () => {
+    it('should commit CMI successfully', async () => {
       setupFetchResponse(true, mockUpdatedElements);
 
       const mockCmi = new MockCmiModel();
@@ -42,47 +44,46 @@ describe("BackendClient", () => {
       expect(mockCmi.updateCmi).toHaveBeenCalledWith(mockUpdatedElements);
       expect(mockUpdateProgress).toHaveBeenCalled();
       expect(fetch).toHaveBeenCalledWith(
-        "http://test-url.com/ctx001/LMSCommit",
+        'http://test-url.com/ctx001/LMSCommit',
         {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ elements: mockCmiSnapshot }),
-        }
+        },
       );
     });
 
-    it("should return false if response not ok", async () => {
+    it('should return false if response not ok', async () => {
       setupFetchResponse(false);
 
       const mockCmi = new MockCmiModel();
       const result = await backendClient.commitCMI(mockCmi as unknown as CmiModel);
 
       expect(fetch).toHaveBeenCalledWith(
-        "http://test-url.com/ctx001/LMSCommit",
+        'http://test-url.com/ctx001/LMSCommit',
         {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ elements: mockCmiSnapshot }),
-        }
+        },
       );
       expect(mockCmi.updateCmi).not.toHaveBeenCalled();
       expect(result).toBe(false);
-      
     });
 
-    it("should return false if elements missing in response", async () => {
+    it('should return false if elements missing in response', async () => {
       setupFetchResponse(true, undefined);
 
       const mockCmi = new MockCmiModel();
       const result = await backendClient.commitCMI(mockCmi as unknown as CmiModel);
 
       expect(fetch).toHaveBeenCalledWith(
-        "http://test-url.com/ctx001/LMSCommit",
+        'http://test-url.com/ctx001/LMSCommit',
         {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ elements: mockCmiSnapshot }),
-        }
+        },
       );
 
       expect(mockCmi.updateCmi).not.toHaveBeenCalled();
@@ -90,8 +91,8 @@ describe("BackendClient", () => {
     });
   });
 
-  describe("finishCMI", () => {
-    it("should finish CMI successfully", async () => {
+  describe('finishCMI', () => {
+    it('should finish CMI successfully', async () => {
       setupFetchResponse(true, mockUpdatedElements);
 
       const mockCmi = new MockCmiModel();
@@ -102,47 +103,46 @@ describe("BackendClient", () => {
       expect(mockCmi.updateCmi).toHaveBeenCalledWith(mockUpdatedElements);
       expect(mockUpdateProgress).toHaveBeenCalled();
       expect(fetch).toHaveBeenCalledWith(
-        "http://test-url.com/ctx001/LMSFinish",
+        'http://test-url.com/ctx001/LMSFinish',
         {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ elements: mockCmiSnapshot }),
-        }
+        },
       );
     });
 
-    it("should return false if response not ok", async () => {
+    it('should return false if response not ok', async () => {
       setupFetchResponse(false);
 
       const mockCmi = new MockCmiModel();
       const result = await backendClient.finishCMI(mockCmi as unknown as CmiModel);
 
       expect(fetch).toHaveBeenCalledWith(
-        "http://test-url.com/ctx001/LMSFinish",
+        'http://test-url.com/ctx001/LMSFinish',
         {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ elements: mockCmiSnapshot }),
-        }
+        },
       );
       expect(mockCmi.updateCmi).not.toHaveBeenCalled();
       expect(result).toBe(false);
-      
     });
 
-    it("should return false if elements missing in response", async () => {
+    it('should return false if elements missing in response', async () => {
       setupFetchResponse(true, undefined);
 
       const mockCmi = new MockCmiModel();
       const result = await backendClient.finishCMI(mockCmi as unknown as CmiModel);
 
       expect(fetch).toHaveBeenCalledWith(
-        "http://test-url.com/ctx001/LMSFinish",
+        'http://test-url.com/ctx001/LMSFinish',
         {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ elements: mockCmiSnapshot }),
-        }
+        },
       );
 
       expect(mockCmi.updateCmi).not.toHaveBeenCalled();
@@ -150,9 +150,8 @@ describe("BackendClient", () => {
     });
   });
 
-  describe("saveCMI", () => {
-
-    it("should save CMI successfully", async () => {
+  describe('saveCMI', () => {
+    it('should save CMI successfully', async () => {
       setupFetchResponse(true, mockUpdatedElements);
 
       const mockCmi = new MockCmiModel();
@@ -163,12 +162,12 @@ describe("BackendClient", () => {
       expect(mockCmi.updateCmi).toHaveBeenCalledWith(mockUpdatedElements);
       expect(mockUpdateProgress).toHaveBeenCalled();
       expect(fetch).toHaveBeenCalledWith(
-        "http://test-url.com/ctx001/data-elements",
+        'http://test-url.com/ctx001/data-elements',
         {
-          method: "PATCH",
-          headers: { "Content-Type": "application/json" },
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ elements: mockCmiSnapshot }),
-        }
+        },
       );
     });
   });

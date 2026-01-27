@@ -1,7 +1,7 @@
 import { CmiModel } from './CmiModel';
 import { CmiValidator } from './CmiValidator';
 import { CMI_CHILDREN_MAP } from './CmiChildrenMap';
-import { ScormErrorCode, ScormErrorCodeType } from '../api/ScormErrorCodes';
+import { ScormErrorCode } from '../api/ScormErrorCodes';
 
 // Mock dependencies
 jest.mock('./CmiValidator');

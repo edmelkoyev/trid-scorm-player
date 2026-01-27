@@ -1,5 +1,6 @@
-import { formatScormTime } from "./ScormTime";
-import { CmiModel } from "../cmi/CmiModel";
+import { formatScormTime } from './ScormTime';
+import { CmiModel } from '../cmi/CmiModel';
+
 
 export class TimingController {
   private sessionStart = 0;
@@ -15,8 +16,8 @@ export class TimingController {
   finalizeSession() {
     const sessionMs = Date.now() - this.sessionStart;
 
-    if (sessionMs >= 0 && this.cmi.getValue("cmi.core.session_time") === undefined) {
-      this.cmi.setValue("cmi.core.session_time", formatScormTime(sessionMs));
+    if (sessionMs >= 0 && this.cmi.getValue('cmi.core.session_time') === undefined) {
+      this.cmi.setValue('cmi.core.session_time', formatScormTime(sessionMs));
     }
   }
 }
