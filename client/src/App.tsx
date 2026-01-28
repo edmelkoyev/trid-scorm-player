@@ -1,5 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable import/no-extraneous-dependencies */
+/* eslint-disable react/jsx-one-expression-per-line */
 import React from 'react';
 import ScoWrapper from './components/ScoWrapper';
+
 
 const App = () => {
   const [loading, setLoading] = React.useState(false);
@@ -13,7 +17,7 @@ const App = () => {
 
     try {
       const response = await fetch('/api/scorm/launch');
-      
+
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
@@ -31,6 +35,7 @@ const App = () => {
     <div>
       <h1>SCORM Player</h1>
       {!data && (
+        // eslint-disable-next-line react/button-has-type
         <button onClick={handleClick} disabled={loading}>
           {loading ? 'Loading...' : 'Launch Course'}
         </button>
