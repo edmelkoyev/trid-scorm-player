@@ -1,7 +1,7 @@
 import { CmiModel } from './CmiModel';
 import { CmiValidator } from './CmiValidator';
 import { CMI_CHILDREN_MAP } from './CmiChildrenMap';
-import { ScormErrorCode, ScormErrorCodeType } from '../api/ScormErrorCodes';
+import { ScormErrorCode } from '../api/ScormErrorCodes';
 
 // Mock dependencies
 jest.mock('./CmiValidator');
@@ -94,6 +94,17 @@ describe('CmiModel', () => {
       expect(result).toBe(errorCode);
     });
   });
+  describe('hasValue', () => {
+    it('should return true when cmi contains given key param', () => {
+      const result = cmiModel.hasValue('cmi.core.lesson_status');
+      expect(result).toBe(true);
+    });
+
+    it('should return true when cmi contains given key param', () => {
+      const result = cmiModel.hasValue('cmi.core.session_time');
+      expect(result).toBe(false);
+    });
+  });
 
   describe('snapshot', () => {
     it('should exclude predefined keys', () => {
@@ -114,33 +125,20 @@ describe('CmiModel', () => {
 
   describe('updateCmi', () => {
     it('should merge response JSON into data', async () => {
-      const mockResponse = {
-        json: jest.fn().mockResolvedValue({
-          elements: {
-            'cmi.core.lesson_status': 'passed',
-            'cmi.core.score.raw': '90',
-          },
-        }),
-      } as unknown as Response;
+      cmiModel.updateCmi({
+        'cmi.core.lesson_status': 'passed',
+        'cmi.core.score.raw': '90',
+      });
 
-      await cmiModel.updateCmi(mockResponse);
-
-      expect(mockResponse.json).toHaveBeenCalled();
       const snap = cmiModel.snapshot();
       expect(snap['cmi.core.lesson_status']).toBe('passed');
       expect(snap['cmi.core.score.raw']).toBe('90');
     });
 
     it('should not remove existing keys not in response', async () => {
-      const mockResponse = {
-        json: jest.fn().mockResolvedValue({
-          elements: {
-            'cmi.core.lesson_status': 'failed',
-          },
-        }),
-      } as unknown as Response;
-
-      await cmiModel.updateCmi(mockResponse);
+      cmiModel.updateCmi({
+        'cmi.core.lesson_status': 'failed',
+      });
 
       const snap = cmiModel.snapshot();
       expect(snap['cmi.core.lesson_status']).toBe('failed');

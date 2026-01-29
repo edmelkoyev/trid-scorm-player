@@ -1,20 +1,22 @@
-import { launchPlayer } from "./PlayerBootstrap";
-import { normalizeCmi } from "../cmi/CmiNormalizer";
-import { PlayerContext } from "./PlayerContext";
+import { launchPlayer } from './PlayerBootstrap';
+import { PlayerContext } from './PlayerContext';
+import { normalizeCmi } from '../cmi/CmiNormalizer';
+
 
 // Mock dependencies
-jest.mock("../cmi/CmiNormalizer");
-jest.mock("./PlayerContext");
+jest.mock('../cmi/CmiNormalizer');
+jest.mock('./PlayerContext');
 
 // Helper to create a resolved Response
 const mockFetch = (ok: boolean, body: string | object) => {
-  const text = typeof body === "string" ? () => Promise.resolve(body) : () => Promise.resolve(JSON.stringify(body));
-  const json = typeof body === "object" ? () => Promise.resolve(body) : () => Promise.reject("Not JSON");
+  const text = typeof body === 'string' ? () => Promise.resolve(body) : () => Promise.resolve(JSON.stringify(body));
+  // eslint-disable-next-line prefer-promise-reject-errors
+  const json = typeof body === 'object' ? () => Promise.resolve(body) : () => Promise.reject('Not JSON');
   return { ok, text, json } as Response;
 };
 
-describe("launchPlayer", () => {
-  const cmiBaseUrl = "https://trid.test.com/scorm/api/ctx";
+describe('launchPlayer', () => {
+  const cmiBaseUrl = 'https://trid.test.com/scorm/api/ctx';
   const mockUpdateProgress = jest.fn();
 
   beforeEach(() => {
@@ -22,13 +24,13 @@ describe("launchPlayer", () => {
     global.fetch = jest.fn();
   });
 
-  it("should successfully initialize, fetch CMI, normalize, and create PlayerContext", async () => {
+  it('should successfully initialize, fetch CMI, normalize, and create PlayerContext', async () => {
     // Arrange
     (global.fetch as jest.Mock)
-      .mockResolvedValueOnce(mockFetch(true, "true")) // LMSInitialize Ok
-      .mockResolvedValueOnce(mockFetch(true, { elements: { "cmi.core.student_id": "123" } })); // data-elements Ok
+      .mockResolvedValueOnce(mockFetch(true, 'true')) // LMSInitialize Ok
+      .mockResolvedValueOnce(mockFetch(true, { elements: { 'cmi.core.student_id': '123' } })); // data-elements Ok
 
-    const mockNormalizedCmi = { "cmi._version": "3.4", "cmi.core.student_id": "123" };
+    const mockNormalizedCmi = { 'cmi._version': '3.4', 'cmi.core.student_id': '123' };
     (normalizeCmi as jest.Mock).mockReturnValue(mockNormalizedCmi);
 
     // Act
@@ -36,64 +38,64 @@ describe("launchPlayer", () => {
 
     // Assert
     expect(global.fetch).toHaveBeenCalledTimes(2);
-    expect(global.fetch).toHaveBeenNthCalledWith(1, `${cmiBaseUrl}/LMSInitialize`, { method: "POST" });
+    expect(global.fetch).toHaveBeenNthCalledWith(1, `${cmiBaseUrl}/LMSInitialize`, { method: 'POST' });
     expect(global.fetch).toHaveBeenNthCalledWith(2, `${cmiBaseUrl}/data-elements`);
 
-    expect(normalizeCmi).toHaveBeenCalledWith({ "cmi.core.student_id": "123" });
+    expect(normalizeCmi).toHaveBeenCalledWith({ 'cmi.core.student_id': '123' });
     expect(PlayerContext).toHaveBeenCalledWith(mockNormalizedCmi, cmiBaseUrl, mockUpdateProgress);
     expect(context).toBeInstanceOf(PlayerContext);
   });
 
-  it("should throw error if LMSInitialize POST fails", async () => {
+  it('should throw error if LMSInitialize POST fails', async () => {
     // Arrange
-    (global.fetch as jest.Mock).mockResolvedValueOnce(mockFetch(false, "Internal Server Error"));
+    (global.fetch as jest.Mock).mockResolvedValueOnce(mockFetch(false, 'Internal Server Error'));
 
     // Act & Assert
     await expect(launchPlayer(cmiBaseUrl, mockUpdateProgress)).rejects.toThrow(
-      "Failed to post LMSInitialize"
+      'Failed to post LMSInitialize',
     );
     expect(global.fetch).toHaveBeenCalledTimes(1);
-    expect(global.fetch).toHaveBeenCalledWith(`${cmiBaseUrl}/LMSInitialize`, { method: "POST" });
+    expect(global.fetch).toHaveBeenCalledWith(`${cmiBaseUrl}/LMSInitialize`, { method: 'POST' });
     expect(normalizeCmi).not.toHaveBeenCalled();
     expect(PlayerContext).not.toHaveBeenCalled();
   });
 
-  it("should throw error if LMSInitialize returns unexpected response", async () => {
+  it('should throw error if LMSInitialize returns unexpected response', async () => {
     // Arrange
-    (global.fetch as jest.Mock).mockResolvedValueOnce(mockFetch(true, "false"));
+    (global.fetch as jest.Mock).mockResolvedValueOnce(mockFetch(true, 'false'));
 
     // Act & Assert
     await expect(launchPlayer(cmiBaseUrl, mockUpdateProgress)).rejects.toThrow(
-      "LMSInitialize returned unexpected response: false"
+      'LMSInitialize returned unexpected response: false',
     );
     expect(global.fetch).toHaveBeenCalledTimes(1);
-    expect(global.fetch).toHaveBeenCalledWith(`${cmiBaseUrl}/LMSInitialize`, { method: "POST" });
+    expect(global.fetch).toHaveBeenCalledWith(`${cmiBaseUrl}/LMSInitialize`, { method: 'POST' });
     expect(normalizeCmi).not.toHaveBeenCalled();
     expect(PlayerContext).not.toHaveBeenCalled();
   });
 
-  it("should throw error if fetching CMI fails", async () => {
+  it('should throw error if fetching CMI fails', async () => {
     // Arrange
     (global.fetch as jest.Mock)
-      .mockResolvedValueOnce(mockFetch(true, "true")) // LMSInitialize OK
-      .mockResolvedValueOnce(mockFetch(false, "Not Found")); // data-elements fails
+      .mockResolvedValueOnce(mockFetch(true, 'true')) // LMSInitialize OK
+      .mockResolvedValueOnce(mockFetch(false, 'Not Found')); // data-elements fails
 
     // Act & Assert
     await expect(launchPlayer(cmiBaseUrl, mockUpdateProgress)).rejects.toThrow(
-      "Failed to fetch CMI from backend"
+      'Failed to fetch CMI from backend',
     );
     expect(global.fetch).toHaveBeenCalledTimes(2);
     expect(normalizeCmi).not.toHaveBeenCalled();
     expect(PlayerContext).not.toHaveBeenCalled();
   });
 
-  it("should propagate errors from normalizeCmi or PlayerContext", async () => {
+  it('should propagate errors from normalizeCmi or PlayerContext', async () => {
     // Arrange
     (global.fetch as jest.Mock)
-      .mockResolvedValueOnce(mockFetch(true, "true"))
+      .mockResolvedValueOnce(mockFetch(true, 'true'))
       .mockResolvedValueOnce(mockFetch(true, { elements: {} }));
 
-    const errorMessage = "Normalization failed";
+    const errorMessage = 'Normalization failed';
     (normalizeCmi as jest.Mock).mockImplementation(() => {
       throw new Error(errorMessage);
     });

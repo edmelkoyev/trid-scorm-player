@@ -1,3 +1,4 @@
+/* eslint-disable quote-props */
 export const CMI_CHILDREN_MAP: Record<string, string[]> = {
   'cmi': [
     'core',
@@ -5,7 +6,7 @@ export const CMI_CHILDREN_MAP: Record<string, string[]> = {
     'student_data',
     'student_preference',
     'interactions',
-    'comments'
+    'comments',
   ],
 
   'cmi.core': [
@@ -19,46 +20,46 @@ export const CMI_CHILDREN_MAP: Record<string, string[]> = {
     'total_time',
     'lesson_mode',
     'exit',
-    'session_time'
+    'session_time',
   ],
 
   'cmi.core.score': [
     'raw',
     'min',
-    'max'
+    'max',
   ],
 
   'cmi.objectives': [
-    '_count'
+    '_count',
   ],
 
   'cmi.objectives.n': [
     'id',
     'score',
-    'status'
+    'status',
   ],
 
   'cmi.objectives.n.score': [
     'raw',
     'min',
-    'max'
+    'max',
   ],
 
   'cmi.student_data': [
     'mastery_score',
     'max_time_allowed',
-    'time_limit_action'
+    'time_limit_action',
   ],
 
   'cmi.student_preference': [
     'audio',
     'language',
     'speed',
-    'text'
+    'text',
   ],
 
   'cmi.interactions': [
-    '_count'
+    '_count',
   ],
 
   'cmi.interactions.n': [
@@ -70,18 +71,18 @@ export const CMI_CHILDREN_MAP: Record<string, string[]> = {
     'weighting',
     'student_response',
     'result',
-    'latency'
+    'latency',
   ],
 
   'cmi.interactions.n.objectives': [
-    '_count'
+    '_count',
   ],
 
   'cmi.interactions.n.correct_responses': [
-    '_count'
+    '_count',
   ],
 
   'cmi.comments': [
-    '_count'
-  ]
+    '_count',
+  ],
 };

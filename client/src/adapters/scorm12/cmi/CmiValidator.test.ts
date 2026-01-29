@@ -1,11 +1,12 @@
-import { ScormErrorCode } from "../api/ScormErrorCodes";
-import { CmiValidator } from "./CmiValidator";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { CmiValidator } from './CmiValidator';
+import { ScormErrorCode } from '../api/ScormErrorCodes';
+
 
 describe('CmiValidator', () => {
-
   describe('validateSet', () => {
     it('should return not supported error', () => {
-      expect(CmiValidator.validateSet('not_supported_test', '')).toBe(ScormErrorCode.NotImplementedError)
+      expect(CmiValidator.validateSet('not_supported_test', '')).toBe(ScormErrorCode.NotImplementedError);
     });
 
     it('should return ReadOnly error for read-only elements', () => {
@@ -57,6 +58,7 @@ describe('CmiValidator', () => {
       expect(CmiValidator.validateSet(key, [] as any)).toBe(ScormErrorCode.IncorrectDataType);
 
       // Test function value
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
       expect(CmiValidator.validateSet(key, (() => {}) as any)).toBe(ScormErrorCode.IncorrectDataType);
 
       // Test number value

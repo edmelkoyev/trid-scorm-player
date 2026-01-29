@@ -1,12 +1,16 @@
-import { ScormErrorCodeType, ScormErrorCode } from "../api/ScormErrorCodes";
-import { CMI_SCHEMA } from "./CmiSchema";
+import { CMI_SCHEMA } from './CmiSchema';
+import {
+  ScormErrorCodeType,
+  ScormErrorCode,
+} from '../api/ScormErrorCodes';
+
 
 export class CmiValidator {
   static validateSet(key: string, value: string): boolean | ScormErrorCodeType {
-    if (typeof value == "undefined"
+    if (typeof value === 'undefined'
       || value == null
-      || typeof value !== "string") {
-        return ScormErrorCode.IncorrectDataType;
+      || typeof value !== 'string') {
+      return ScormErrorCode.IncorrectDataType;
     }
 
     const schema = CMI_SCHEMA[key];
@@ -22,8 +26,10 @@ export class CmiValidator {
       return schema.maxLength?.error || false;
     }
 
-    if ((schema.minMax?.min !== undefined || schema.minMax?.max !== undefined) &&
-        isNaN(Number(value))) {
+    if (
+      (schema.minMax?.min !== undefined || schema.minMax?.max !== undefined)
+      && Number.isNaN(Number(value))
+    ) {
       return schema.minMax?.error || false;
     }
 
