@@ -16,7 +16,7 @@ export class TimingController {
   finalizeSession() {
     const sessionMs = Date.now() - this.sessionStart;
 
-    if (sessionMs >= 0 && this.cmi.getValue('cmi.core.session_time') === undefined) {
+    if (sessionMs >= 0 && !this.cmi.hasValue('cmi.core.session_time')) {
       this.cmi.setValue('cmi.core.session_time', formatScormTime(sessionMs));
     }
   }

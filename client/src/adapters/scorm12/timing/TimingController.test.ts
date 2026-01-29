@@ -44,7 +44,7 @@ describe('TimingController', () => {
         .mockReturnValueOnce(startTime)
         .mockReturnValue(endTime);
 
-      mockCmi.getValue.mockReturnValue(undefined);
+      mockCmi.hasValue.mockReturnValue(false);
       (formatScormTime as jest.Mock).mockReturnValue('FORMATTED_5_SEC');
 
       // Act
@@ -52,7 +52,7 @@ describe('TimingController', () => {
       timingController.finalizeSession();
 
       // Assert
-      expect(mockCmi.getValue).toHaveBeenCalledWith('cmi.core.session_time');
+      expect(mockCmi.hasValue).toHaveBeenCalledWith('cmi.core.session_time');
       expect(formatScormTime).toHaveBeenCalledWith(sessionDurationMs);
       expect(mockCmi.setValue).toHaveBeenCalledWith('cmi.core.session_time', 'FORMATTED_5_SEC');
     });
@@ -66,14 +66,14 @@ describe('TimingController', () => {
         .mockReturnValueOnce(startTime)
         .mockReturnValue(endTime);
 
-      mockCmi.getValue.mockReturnValue('FORMATTED_5_SEC');
+      mockCmi.hasValue.mockReturnValue(true);
 
       // Act
       timingController.startSession();
       timingController.finalizeSession();
 
       // Assert
-      expect(mockCmi.getValue).toHaveBeenCalledWith('cmi.core.session_time');
+      expect(mockCmi.hasValue).toHaveBeenCalledWith('cmi.core.session_time');
       expect(formatScormTime).not.toHaveBeenCalled();
       expect(mockCmi.setValue).not.toHaveBeenCalled();
     });
@@ -83,7 +83,7 @@ describe('TimingController', () => {
       const mockTime = 1000000;
       jest.spyOn(Date, 'now').mockReturnValue(mockTime);
 
-      mockCmi.getValue.mockReturnValue(undefined);
+      mockCmi.hasValue.mockReturnValue(false);
       (formatScormTime as jest.Mock).mockReturnValue('FORMATTED_0_SEC');
 
       // Act
@@ -91,6 +91,7 @@ describe('TimingController', () => {
       timingController.finalizeSession();
 
       // Assert
+      expect(mockCmi.hasValue).toHaveBeenCalledWith('cmi.core.session_time');
       expect(formatScormTime).toHaveBeenCalledWith(0);
       expect(mockCmi.setValue).toHaveBeenCalledWith('cmi.core.session_time', 'FORMATTED_0_SEC');
     });

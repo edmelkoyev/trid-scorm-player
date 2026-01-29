@@ -94,6 +94,17 @@ describe('CmiModel', () => {
       expect(result).toBe(errorCode);
     });
   });
+  describe('hasValue', () => {
+    it('should return true when cmi contains given key param', () => {
+      const result = cmiModel.hasValue('cmi.core.lesson_status');
+      expect(result).toBe(true);
+    });
+
+    it('should return true when cmi contains given key param', () => {
+      const result = cmiModel.hasValue('cmi.core.session_time');
+      expect(result).toBe(false);
+    });
+  });
 
   describe('snapshot', () => {
     it('should exclude predefined keys', () => {

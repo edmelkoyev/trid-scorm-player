@@ -60,6 +60,10 @@ export class CmiModel {
     return true;
   }
 
+  hasValue(key: string): boolean {
+    return this.data[key] !== undefined;
+  }
+
   snapshot(): Record<string, string> {
     return Object.fromEntries(
       Object.entries(this.data).filter(([key]) => !cmiExcludeKeys.has(key)),
