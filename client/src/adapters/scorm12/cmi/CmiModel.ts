@@ -1,33 +1,40 @@
-import {CmiValidator} from "./CmiValidator";
-import {CMI_CHILDREN_MAP} from "./CmiChildrenMap";
-import {ScormErrorCode, ScormErrorCodeType} from "../api/ScormErrorCodes";
+import { CmiValidator } from './CmiValidator';
+import { CMI_CHILDREN_MAP } from './CmiChildrenMap';
+import {
+  ScormErrorCode,
+  ScormErrorCodeType,
+} from '../api/ScormErrorCodes';
+
 
 const cmiExcludeKeys = new Set([
-    'cmi._version',
-    'cmi.core.credit',
-    'cmi.core.entry',
-    'cmi.core.lesson_mode',
-    'cmi.core.student_id',
-    'cmi.core.student_name',
-    'cmi.core.total_time',
-    'cmi.launch_data'
+  'cmi._version',
+  'cmi.core.credit',
+  'cmi.core.entry',
+  'cmi.core.lesson_mode',
+  'cmi.core.student_id',
+  'cmi.core.student_name',
+  'cmi.core.total_time',
+  'cmi.launch_data',
 ]);
 
 export class CmiModel {
   private data: Record<string, string>;
 
+  private cmiChildrenMap: Record<string, string[]>;
+
   constructor(initial: Record<string, string>) {
     this.data = { ...initial };
+    this.cmiChildrenMap = CMI_CHILDREN_MAP;
   }
 
   getChildren(parent: string): string {
-    const children = CMI_CHILDREN_MAP[parent];
+    const children = this.cmiChildrenMap[parent];
 
     if (!children) {
-      return "";
+      return '';
     }
 
-    return children.join(",");
+    return children.join(',');
   }
 
   getValue(key: string): string | undefined | ScormErrorCodeType {
@@ -38,7 +45,7 @@ export class CmiModel {
   }
 
   setValue(key: string, value: string | number): boolean | ScormErrorCodeType {
-    const valueNorm = typeof value === 'number'? value.toString() : value;
+    const valueNorm = typeof value === 'number' ? value.toString() : value;
     const validateResult = CmiValidator.validateSet(key, valueNorm);
     if (typeof validateResult === 'boolean') {
       if (!validateResult) {
@@ -53,14 +60,17 @@ export class CmiModel {
     return true;
   }
 
+  hasValue(key: string): boolean {
+    return this.data[key] !== undefined;
+  }
+
   snapshot(): Record<string, string> {
     return Object.fromEntries(
-      Object.entries(this.data).filter(([key]) => !cmiExcludeKeys.has(key))
+      Object.entries(this.data).filter(([key]) => !cmiExcludeKeys.has(key)),
     );
   }
-  
-  async updateCmi(response: Response) {
-    const json = await response.json();
-    this.data = { ...this.data, ...json.elements};
+
+  updateCmi(cmiElements: Record<string, string>) {
+    this.data = { ...this.data, ...cmiElements };
   }
 }

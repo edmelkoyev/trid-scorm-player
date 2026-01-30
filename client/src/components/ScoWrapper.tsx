@@ -1,5 +1,7 @@
-import React from "react";
-import { launchPlayer } from "../adapters/scorm12";
+/* eslint-disable import/no-extraneous-dependencies */
+import React from 'react';
+import { launchPlayer } from '../adapters/scorm12';
+
 
 interface ScoWrapperProps {
   courseId: string,
@@ -15,10 +17,11 @@ const ScoWrapper: React.FC<ScoWrapperProps> = ({ courseId, scoId, scoUrl }) => {
   React.useEffect(() => {
     if (hasLaunched.current) return;
     hasLaunched.current = true;
-  
+
     const authorizeScorm = async () => {
       try {
-        const context = await launchPlayer(`/scorm/api/${courseId}/${scoId}`, () => { console.log(111111)});
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const context = await launchPlayer(`/scorm/api/${courseId}/${scoId}`, () => { window.console.log(111111); });
         setIsAuthorized(true);
         setError(null);
       } catch (err) {
@@ -26,13 +29,13 @@ const ScoWrapper: React.FC<ScoWrapperProps> = ({ courseId, scoId, scoUrl }) => {
         setIsAuthorized(false);
       }
     };
-    
     if (courseId && scoId) {
       authorizeScorm();
     }
   }, [courseId, scoId]);
 
   if (error) {
+    // eslint-disable-next-line react/jsx-one-expression-per-line
     return <div className="error">Error: {error}</div>;
   }
 

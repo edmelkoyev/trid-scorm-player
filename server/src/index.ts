@@ -58,17 +58,17 @@ app.patch('/scorm/api/crs123/sco456/data-elements', (req, res) => {
   res.json(cmiPack);
 });
 
+app.post('/scorm/api/crs123/sco456/LMSInitialize', (req, res) => {
+  res.type('text/plain; charset=utf-8').send('true');
+});
+
 app.post('/scorm/api/crs123/sco456/LMSCommit', (req, res) => {
   cmiPack = injectReadOnly(cmiPack, req.body);
-  res.json(cmiPack);
+  res.type('text/plain; charset=utf-8').send('true');
 });
 
 app.post('/scorm/api/crs123/sco456/LMSFinish', (req, res) => {
   cmiPack = injectReadOnly(cmiPack, req.body);
-  res.json(cmiPack);
-});
-
-app.post('/scorm/api/crs123/sco456/LMSInitialize', (req, res) => {
   res.type('text/plain; charset=utf-8').send('true');
 });
 
