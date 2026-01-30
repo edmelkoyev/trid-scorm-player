@@ -7,7 +7,7 @@ var SCORM = {
             console.log("SCORM API is found!");
             var initResult = this.api.LMSInitialize("");
             console.log("SCORM API Init Result: " + initResult);
-            return initResult;
+            return initResult === 'true';
         }
         console.error("SCORM API is not found!");
         return false;
@@ -50,7 +50,9 @@ var SCORM = {
 
     finish: function() {
         if (this.api) {
-            this.api.LMSFinish("");
+            var finishResult = this.api.LMSFinish("");
+            return finishResult === 'true';
         }
+        return false;
     }
 };
