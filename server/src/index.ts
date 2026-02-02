@@ -12,7 +12,9 @@ let cmiPack: {elements: Record<string, string> } = {
     'cmi.core.score.raw': '',
     'cmi.core.student_id': 'user-789',
     'cmi.core.student_name': 'John Doe',
-    'cmi.suspend_data': ''
+    'cmi.suspend_data': '',
+    'cmi.core._children': 'credit,entry,score',
+    'cmi.core.score._children':"max,min,raw" 
   }
 };
 
@@ -30,7 +32,9 @@ const injectReadOnly = (currentCmiPack: { elements: Record<string, string> }, up
     elements: {
       ...currentCmiPack.elements,
       ...normalizedUpdateElements,
-      'cmi.core.total_time': total_time_stub
+      'cmi.core.total_time': total_time_stub,
+      'cmi.core._children': 'credit,entry,score',
+      'cmi.core.score._children':"max,min,raw" 
     }
   }
 }

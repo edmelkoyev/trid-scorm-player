@@ -15,6 +15,8 @@ const cmiExcludeKeys = new Set([
   'cmi.core.student_name',
   'cmi.core.total_time',
   'cmi.launch_data',
+  'cmi.core._children',
+  'cmi.core.score._children',
 ]);
 
 export class CmiModel {
