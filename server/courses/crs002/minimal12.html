@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>SCORM 1.2 Incremental Score Test</title>
+</head>
+<body onload="startCourse()">
+
+  <h2>SCORM 1.2 Incremental Score Test</h2>
+
+  <h3>Read Only SCO props</h3>
+  <ul>
+    <li>cmi._version: <strong id="cmi._version">-</strong></li>
+    <li>cmi.core._children: <strong id="cmi.core._children">-</strong></li>
+    <li>cmi.core.student_id: <strong id="cmi.core.student_id">-</strong></li>
+    <li>cmi.core.student_name: <strong id="cmi.core.student_name">-</strong></li>
+    <li>cmi.core.credit: <strong id="cmi.core.credit">-</strong></li>
+    <li>cmi.core.entry: <strong id="cmi.core.entry">-</strong></li>
+    <li>cmi.core.score._children: <strong id="cmi.core.score._children">-</strong></li>
+    <li>cmi.core.total_time: <strong id="cmi.core.total_time">-</strong></li>
+    <li>cmi.core.lesson_mode: <strong id="cmi.core.lesson_mode">-</strong></li>
+  </ul>
+
+  <h3>Read/Write SCO props</h3>
+  <ul>
+    <li>cmi.core.lesson_location: <strong id="cmi.core.lesson_location">-</strong></li>
+    <li>cmi.core.lesson_status: <strong id="cmi.core.lesson_status">-</strong></li>
+    <li>cmi.core.score.raw: <strong id="cmi.core.score.raw">-</strong></li>
+    <li>cmi.core.score.max: <strong id="cmi.core.score.max">-</strong></li>
+    <li>cmi.core.score.min: <strong id="cmi.core.score.min">-</strong></li>
+    <li>cmi.suspend_data: <strong id="cmi.suspend_data">-</strong></li>
+  </ul>
+
+  <h3>Write Only SCO props</h3>
+  <ul>
+    <li>cmi.core.exit</li>
+    <li>cmi.core.session_time</li>
+  </ul>
+
+  <hr>
+
+  <p>Current score: <strong id="score">0</strong></p>
+
+  <button id="addPointsBtn" onclick="addPoints()">Add 10 points</button>
+  <button id="exitCourseBtn" onclick="exitCourse()">Exit course</button>
+
+  <script>
+  ////////////////////////////////
+  // Minimal SCORM 1.2 Wrapper
+  ////////////////////////////////
+  var scorm = {
+    api: null,
+
+    findAPI: function(win) {
+      while (win) {
+        if (win.API) return win.API;
+        if (win.parent && win.parent !== win) {
+          win = win.parent;
+        } else {
+          return null;
+        }
+      }
+    },
+
+    init: function() {
+      this.api = this.findAPI(window);
+      if (!this.api) {
+        alert("SCORM API not found");
+        return false;
+      }
+      return this.api.LMSInitialize("") === "true";
+    },
+
+    get: function(name) {
+      return this.api.LMSGetValue(name);
+    },
+
+    set: function(name, value) {
+      return this.api.LMSSetValue(name, value);
+    },
+
+    commit: function() {
+      return this.api.LMSCommit("");
+    },
+
+    finish: function() {
+      return this.api.LMSFinish("");
+    }
+  };
+
+  ////////////////////////////////
+  // Course State
+  ////////////////////////////////
+  var score = 0;
+  var maxScore = 100;
+  var scoEntry = '';
+
+  function loadState() {
+    // Resume previous progress
+    var suspendData = scorm.get("cmi.suspend_data");
+    if (suspendData) {
+      var match = suspendData.match(/score=(\d+)/);
+      if (match) {
+        score = parseInt(match[1], 10);
+      }
+    }
+
+    var cmiCoreEntry = scorm.get("cmi.core.entry");
+    if (cmiCoreEntry){
+      scoEntry = cmiCoreEntry
+    }
+    updateUI();
+  }
+
+  function updateUI() {
+    document.getElementById("score").innerText = score;
+
+    if ( score === maxScore ){
+      document.getElementById("addPointsBtn").disabled = true;
+    }
+  
+    if ( scoEntry === '') {
+      document.getElementById("exitCourseBtn").disabled = true;
+    }
+  }
+
+  ////////////////////////////////
+  // Increment Score Logic
+  ////////////////////////////////
+  function addPoints() {
+    if (score >= maxScore) {
+      return;
+    }
+    
+    score += 10;
+    if (score > maxScore) {
+      score = maxScore;
+    }
+
+    scorm.set("cmi.core.score.raw", score);
+    scorm.set("cmi.core.score.min", 0);
+    scorm.set("cmi.core.score.max", maxScore);
+
+    scorm.set("cmi.core.lesson_location", "Lesson Location - point #" + + score);
+    scorm.set("cmi.suspend_data", "Suspend Data for score=" + score);
+
+    
+    if (score >= maxScore) {
+      scorm.set("cmi.core.lesson_status", "completed");
+    } else {
+      scorm.set("cmi.core.lesson_status", "incomplete");
+    }
+
+    scorm.set("cmi.core.exit", "suspend");
+    scorm.commit();
+    updateUI();
+  }
+
+  ////////////////////////////////
+  // Exit / Finish
+  ////////////////////////////////
+  function exitCourse() {
+    if (score < maxScore) {
+      scorm.set("cmi.core.exit", "suspend");
+    } else {
+      scorm.set("cmi.core.exit", "");
+      document.getElementById("exitCourseBtn").disabled = true;
+    }
+
+    scorm.finish();
+  }
+
+  ////////////////////////////////
+  // Course Startup
+  ////////////////////////////////
+  function renderReadOnlyProp(key) {
+    var val = scorm.get(key);
+    var propValue = typeof val === "string" ? val : "UNKNOWN";
+    var elId = key;
+
+    document.getElementById(elId).innerText = `"${propValue}"`;
+  }
+
+  function startCourse() {
+    if (!scorm.init()) return;
+
+    // Read Only info
+    renderReadOnlyProp("cmi._version");
+    renderReadOnlyProp("cmi.core._children");
+    renderReadOnlyProp("cmi.core.student_id");
+    renderReadOnlyProp("cmi.core.student_name");
+    renderReadOnlyProp("cmi.core.credit");
+    renderReadOnlyProp("cmi.core.entry");
+    renderReadOnlyProp("cmi.core.score._children");
+    renderReadOnlyProp("cmi.core.total_time");
+    renderReadOnlyProp("cmi.core.lesson_mode");
+
+    // Read / Write info
+    renderReadOnlyProp("cmi.core.lesson_location");
+    renderReadOnlyProp("cmi.core.lesson_status");
+    renderReadOnlyProp("cmi.core.score.raw");
+    renderReadOnlyProp("cmi.core.score.max");
+    renderReadOnlyProp("cmi.core.score.min");
+    renderReadOnlyProp("cmi.suspend_data");
+
+    // Lesson status
+    var status = scorm.get("cmi.core.lesson_status");
+    if (!status || status === "not attempted") {
+      scorm.set("cmi.core.lesson_status", "incomplete");
+    }
+
+    loadState();
+  }
+  </script>
+</body>
+</html>
