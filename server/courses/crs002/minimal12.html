@@ -136,9 +136,9 @@
       score = maxScore;
     }
 
-    scorm.set("cmi.core.score.raw", score);
-    scorm.set("cmi.core.score.min", 0);
-    scorm.set("cmi.core.score.max", maxScore);
+    scorm.set("cmi.core.score.raw", score.toString());
+    scorm.set("cmi.core.score.min", "0");
+    scorm.set("cmi.core.score.max", maxScore.toString());
 
     scorm.set("cmi.core.lesson_location", "Lesson Location - point #" + + score);
     scorm.set("cmi.suspend_data", "Suspend Data for score=" + score);
