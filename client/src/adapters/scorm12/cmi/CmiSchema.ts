@@ -124,6 +124,15 @@ export const CMI_SCHEMA: Record<string, CmiElementSchema> = {
     },
   },
   'cmi.core.exit': {
+    enum: {
+      value: [
+        'time-out',
+        'suspend',
+        'logout',
+        '',
+      ],
+      error: ScormErrorCode.ElementNotAnArray,
+    },
     writeOnly: {
       value: true,
       error: ScormErrorCode.WriteOnly,

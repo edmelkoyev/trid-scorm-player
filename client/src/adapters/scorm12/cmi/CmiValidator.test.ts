@@ -21,6 +21,15 @@ describe('CmiValidator', () => {
       expect(CmiValidator.validateSet(key, 'invalid_status')).toBe(ScormErrorCode.ElementNotAnArray);
     });
 
+    it('should validate enum values for cmi.core.exit correctly', () => {
+      const key = 'cmi.core.exit';
+      expect(CmiValidator.validateSet(key, 'time-out')).toBe(true);
+      expect(CmiValidator.validateSet(key, 'suspend')).toBe(true);
+      expect(CmiValidator.validateSet(key, 'logout')).toBe(true);
+      expect(CmiValidator.validateSet(key, '')).toBe(true);
+      expect(CmiValidator.validateSet(key, 'invalid_status')).toBe(ScormErrorCode.ElementNotAnArray);
+    });
+
     it('should validate maxLength correctly', () => {
       const key = 'cmi.suspend_data';
 
