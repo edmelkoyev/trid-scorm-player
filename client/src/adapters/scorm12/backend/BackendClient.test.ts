@@ -56,7 +56,7 @@ describe('BackendClient', () => {
         },
       );
       expect(mockCmi.updateCmi).not.toHaveBeenCalled();
-      expect(mockUpdateProgress).toHaveBeenCalled();
+      expect(mockUpdateProgress).toHaveBeenCalledWith(false);
       expect(result).toBe(true);
     });
 
@@ -118,7 +118,7 @@ describe('BackendClient', () => {
         },
       );
       expect(mockCmi.updateCmi).not.toHaveBeenCalled();
-      expect(mockUpdateProgress).toHaveBeenCalled();
+      expect(mockUpdateProgress).toHaveBeenCalledWith(true);
       expect(result).toBe(true);
     });
 
@@ -173,7 +173,7 @@ describe('BackendClient', () => {
       expect(result).toBe(true);
       expect(mockCmi.snapshot).toHaveBeenCalled();
       expect(mockCmi.updateCmi).toHaveBeenCalledWith(mockUpdatedElements);
-      expect(mockUpdateProgress).toHaveBeenCalled();
+      expect(mockUpdateProgress).toHaveBeenCalledWith(false);
       expect(fetch).toHaveBeenCalledWith(
         'http://test-url.com/ctx001/data-elements',
         {

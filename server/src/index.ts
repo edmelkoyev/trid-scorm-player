@@ -72,6 +72,8 @@ app.post('/scorm/api/crs123/sco456/LMSCommit', (req, res) => {
 });
 
 app.post('/scorm/api/crs123/sco456/LMSFinish', (req, res) => {
+  console.log('POST /LMSFinish call');
+  console.log(req.body);
   cmiPack = injectReadOnly(cmiPack, req.body);
   res.type('text/plain; charset=utf-8').send('true');
 });

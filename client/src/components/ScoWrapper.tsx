@@ -21,7 +21,7 @@ const ScoWrapper: React.FC<ScoWrapperProps> = ({ courseId, scoId, scoUrl }) => {
     const authorizeScorm = async () => {
       try {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const context = await launchPlayer(`/scorm/api/${courseId}/${scoId}`, () => { window.console.log(111111); });
+        const context = await launchPlayer(`/scorm/api/${courseId}/${scoId}`, (finished: boolean) => { window.console.log(`updateProgress call with finished:${finished}`); });
         setIsAuthorized(true);
         setError(null);
       } catch (err) {

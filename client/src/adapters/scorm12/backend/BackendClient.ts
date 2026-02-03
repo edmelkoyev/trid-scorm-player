@@ -8,9 +8,9 @@ export class BackendClient {
 
   private lmsFinish: string;
 
-  private updateProgress: () => void;
+  private updateProgress: (finished: boolean) => void;
 
-  constructor(cmiBaseUrl: string, updateProgress: () => void) {
+  constructor(cmiBaseUrl: string, updateProgress: (finished: boolean) => void) {
     this.cmiDataUrl = `${cmiBaseUrl}/data-elements`;
     this.lmsCommitUrl = `${cmiBaseUrl}/LMSCommit`;
     this.lmsFinish = `${cmiBaseUrl}/LMSFinish`;
@@ -32,7 +32,7 @@ export class BackendClient {
         return false;
       }
 
-      this.updateProgress();
+      this.updateProgress(false);
 
       return true;
     } catch {
@@ -55,7 +55,7 @@ export class BackendClient {
         return false;
       }
 
-      this.updateProgress();
+      this.updateProgress(true);
 
       return true;
     } catch {
@@ -68,7 +68,7 @@ export class BackendClient {
       const res = await fetch(this.cmiDataUrl, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ elements: { ...cmi.snapshot() } }),
+        body: JSON.stringify({ elements: cmi.snapshot() }),
       });
 
       if (!res.ok) return false;
@@ -77,11 +77,21 @@ export class BackendClient {
       if (!elements) return false;
 
       cmi.updateCmi(elements);
-      this.updateProgress();
+      this.updateProgress(false);
 
       return true;
     } catch {
       return false;
     }
+  }
+
+  escapeCMI(cmi: CmiModel) {
+    navigator.sendBeacon(
+      this.lmsFinish,
+      new Blob(
+        [JSON.stringify({ elements: cmi.snapshot() })],
+        { type: 'application/json' },
+      ),
+    );
   }
 }
