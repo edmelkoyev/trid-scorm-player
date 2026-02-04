@@ -1,4 +1,5 @@
-import { PlayerState } from "./PlayerState";
+import { PlayerState } from './PlayerState';
+
 
 export class PlayerStateMachine {
   private state = PlayerState.Idle;

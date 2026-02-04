@@ -9,7 +9,7 @@
     <h1>Welcome to SCORM 1.2!</h1>
     <h2>Lesson 01</h2>
     <hr />
-    <button onclick="startLesson()">Start</button>
+    <button id="btnStartElId" onclick="startLesson()">Start</button>
     <hr />
     <div>Current Progress <span id="scoreRawElId">n/a</span></div>
     <button id="btnNextStepElId" disabled onclick="makeNextStep()">Make Next Step</button>
@@ -93,7 +93,7 @@
             SCORM.commit();
 
             scoScoreRaw = nextRaw;
-            window.console.log(`**** scoScoreRaw: ${scoScoreRaw}`)
+            window.console.log(`[SCO]*** scoScoreRaw: ${scoScoreRaw}`)
 
             renderScore('scoreRawElId', scoScoreRaw);
 
@@ -108,24 +108,30 @@
             const successResultApi = SCORM.set('cmi.core.student_id', "JOeStudent");
             const successResult = successResultApi.trim().toLowerCase() === 'true';
 
-            console.log(`*** successResultApi: ${successResultApi}, ${typeof successResultApi}`);
-            console.log(`*** successResult: ${successResult}`);
+            console.log(`[SCO]*** successResultApi: ${successResultApi}, ${typeof successResultApi}`);
+            console.log(`[SCO]*** successResult: ${successResult}`);
 
             if ( !successResult ){
-                console.log( '**** Error Handling:');
+                console.log( '[SCO]*** Error Handling:');
 
                 const errCode = SCORM.getLastError();
                 console.log(`LMSGetLastError: ${errCode}`);
                 console.log(`LMSGetErrorString: ${SCORM.getErrorString(errCode)}`);
 
             } else {
-                console.log( '**** Error handling: Incorrect SCORM API contract.');
+                console.log( '[SCO]*** Error handling: Incorrect SCORM API contract.');
             }
         }
 
         function finishLesson() {
-            SCORM.finish();
-            enableButton('btnFinishElId', false);
+            const finishResult = SCORM.finish()
+            if(finishResult) {
+                enableButton('btnStartElId', false);
+                enableButton('btnNextStepElId', false);
+                enableButton('btnFinishElId', false);
+                enableButton('btnMakeApiMistake', false);
+            }
+            
         }
 
         function enableButton ( btnId, enable) {

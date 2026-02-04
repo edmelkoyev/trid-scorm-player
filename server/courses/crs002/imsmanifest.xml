@@ -10,17 +10,16 @@
     </metadata>
     <organizations default="ORG-1">
         <organization identifier="ORG-1">
-            <title>EDW Course - Single SCO - v3 20260129</title>
+            <title>EDW Course - minimal SCO communications - 20260202</title>
             <item identifier="ITEM-1" identifierref="RES-1">
-                <title>Lesson 1</title>
+                <title>Minimal SCO communications Lesson 1</title>
                 <adlcp:masteryscore>80</adlcp:masteryscore>
             </item>
         </organization>
     </organizations>
     <resources>
-        <resource identifier="RES-1" type="webcontent" adlcp:scormtype="sco" href="lesson01.html">
-            <file href="lesson01.html"/>
-            <file href="js/scorm_clent_api.js"/>
+        <resource identifier="RES-1" type="webcontent" adlcp:scormtype="sco" href="minimal12.html">
+            <file href="minimal12.html"/>
         </resource>
     </resources>
 </manifest>

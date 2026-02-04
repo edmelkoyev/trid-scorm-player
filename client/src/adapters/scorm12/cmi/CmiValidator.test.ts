@@ -1,11 +1,12 @@
-import { ScormErrorCode } from "../api/ScormErrorCodes";
-import { CmiValidator } from "./CmiValidator";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { CmiValidator } from './CmiValidator';
+import { ScormErrorCode } from '../api/ScormErrorCodes';
+
 
 describe('CmiValidator', () => {
-
   describe('validateSet', () => {
     it('should return not supported error', () => {
-      expect(CmiValidator.validateSet('not_supported_test', '')).toBe(ScormErrorCode.NotImplementedError)
+      expect(CmiValidator.validateSet('not_supported_test', '')).toBe(ScormErrorCode.NotImplementedError);
     });
 
     it('should return ReadOnly error for read-only elements', () => {
@@ -17,6 +18,15 @@ describe('CmiValidator', () => {
       const key = 'cmi.core.lesson_status';
 
       expect(CmiValidator.validateSet(key, 'passed')).toBe(true);
+      expect(CmiValidator.validateSet(key, 'invalid_status')).toBe(ScormErrorCode.ElementNotAnArray);
+    });
+
+    it('should validate enum values for cmi.core.exit correctly', () => {
+      const key = 'cmi.core.exit';
+      expect(CmiValidator.validateSet(key, 'time-out')).toBe(true);
+      expect(CmiValidator.validateSet(key, 'suspend')).toBe(true);
+      expect(CmiValidator.validateSet(key, 'logout')).toBe(true);
+      expect(CmiValidator.validateSet(key, '')).toBe(true);
       expect(CmiValidator.validateSet(key, 'invalid_status')).toBe(ScormErrorCode.ElementNotAnArray);
     });
 
@@ -57,6 +67,7 @@ describe('CmiValidator', () => {
       expect(CmiValidator.validateSet(key, [] as any)).toBe(ScormErrorCode.IncorrectDataType);
 
       // Test function value
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
       expect(CmiValidator.validateSet(key, (() => {}) as any)).toBe(ScormErrorCode.IncorrectDataType);
 
       // Test number value

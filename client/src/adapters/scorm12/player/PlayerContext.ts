@@ -1,17 +1,22 @@
-import { CmiModel } from "../cmi/CmiModel";
-import { PlayerStateMachine } from "../state/PlayerStateMachine";
-import { TimingController } from "../timing/TimingController";
-import { BackendClient } from "../backend/BackendClient";
-import { Scorm12API } from "../api/Scorm12API";
+import { CmiModel } from '../cmi/CmiModel';
+import { PlayerStateMachine } from '../state/PlayerStateMachine';
+import { TimingController } from '../timing/TimingController';
+import { BackendClient } from '../backend/BackendClient';
+import { Scorm12API } from '../api/Scorm12API';
+
 
 export class PlayerContext {
   public cmi: CmiModel;
+
   public stateMachine: PlayerStateMachine;
+
   public timing: TimingController;
+
   public backend: BackendClient;
+
   public api: Scorm12API;
 
-  constructor(cmiData: Record<string, string>, cmiBaseUrl: string, updateProgress: () => void) {
+  constructor(cmiData: Record<string, string>, cmiBaseUrl: string, updateProgress: (finished: boolean) => void) {
     this.cmi = new CmiModel(cmiData);
     this.stateMachine = new PlayerStateMachine();
     this.timing = new TimingController(this.cmi);
@@ -21,6 +26,17 @@ export class PlayerContext {
     this.api = new Scorm12API(this.cmi, this.stateMachine, this.timing, this.backend);
     this.stateMachine.setReady();
     // Expose globally for SCO iframe
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (window as any).API = this.api;
+  }
+
+  escape() {
+    if (this.stateMachine.isInitialized() && this.cmi.getValue('cmi.core.entry') !== '') {
+      if (!this.cmi.hasValue('cmi.core.exit')) {
+        this.cmi.setValue('cmi.core.exit', 'suspend');
+      }
+      this.timing.finalizeSession();
+      this.backend.escapeCMI(this.cmi);
+    }
   }
 }

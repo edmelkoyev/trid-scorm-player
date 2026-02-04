@@ -1,15 +1,16 @@
-import {Scorm12API} from '../Scorm12API';
-import {CmiModel} from '../../cmi/CmiModel';
-import {PlayerStateMachine} from '../../state/PlayerStateMachine';
-import {TimingController} from '../../timing/TimingController';
-import {BackendClient} from '../../backend/BackendClient';
-import {ScormErrorCode} from '../ScormErrorCodes';
+import { Scorm12API } from './Scorm12API';
+import { ScormErrorCode } from './ScormErrorCodes';
+import { CmiModel } from '../cmi/CmiModel';
+import { PlayerStateMachine } from '../state/PlayerStateMachine';
+import { TimingController } from '../timing/TimingController';
+import { BackendClient } from '../backend/BackendClient';
+
 
 // Mock all dependencies
-jest.mock('../../cmi/CmiModel');
-jest.mock('../../state/PlayerStateMachine');
-jest.mock('../../timing/TimingController');
-jest.mock('../../backend/BackendClient');
+jest.mock('../cmi/CmiModel');
+jest.mock('../state/PlayerStateMachine');
+jest.mock('../timing/TimingController');
+jest.mock('../backend/BackendClient');
 
 describe('Scorm12API', () => {
   let api: Scorm12API;
@@ -216,6 +217,7 @@ describe('Scorm12API', () => {
 
     it('should return false for unknown error codes', () => {
       mockStateMachine.isInitialized.mockReturnValue(true);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       mockCmi.setValue.mockReturnValue(999 as any);
 
       const result = api.LMSSetValue('cmi.core.lesson_status', 'passed');

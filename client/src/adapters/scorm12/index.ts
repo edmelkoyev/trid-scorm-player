@@ -1,1 +1,1 @@
-export { launchPlayer } from "./player/PlayerBootstrap";
+export { launchPlayer } from './player/PlayerBootstrap';

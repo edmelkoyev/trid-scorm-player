@@ -12,12 +12,15 @@ let cmiPack: {elements: Record<string, string> } = {
     'cmi.core.score.raw': '',
     'cmi.core.student_id': 'user-789',
     'cmi.core.student_name': 'John Doe',
-    'cmi.suspend_data': ''
+    'cmi.suspend_data': '',
+    'cmi.core._children': 'credit,entry,score',
+    'cmi.core.score._children':"max,min,raw" 
   }
 };
 
 const cmiExcludeKeys = new Set([
     'cmi.core.session_time',
+    'cmi.core.exit'
 ]);
 
 const injectReadOnly = (currentCmiPack: { elements: Record<string, string> }, updateCmiPack: { elements: Record<string, string> }) => {
@@ -30,7 +33,8 @@ const injectReadOnly = (currentCmiPack: { elements: Record<string, string> }, up
     elements: {
       ...currentCmiPack.elements,
       ...normalizedUpdateElements,
-      'cmi.core.total_time': total_time_stub
+      'cmi.core.total_time': total_time_stub,
+      'cmi.core.entry': updateCmiPack.elements['cmi.core.exit'] === 'suspend' ? 'resume' : '',
     }
   }
 }
@@ -46,7 +50,7 @@ app.get('/api/hello', (req, res) => {
 });
 
 app.get('/api/scorm/launch', (req, res) => {
-  res.json({ courseId: "crs123", scoId: "sco456", scoUrl: '/courses/crs001/lesson01.html'});
+  res.json({ courseId: "crs123", scoId: "sco456", scoUrl: '/courses/crs002/minimal12.html'});
 });
 
 app.get('/scorm/api/crs123/sco456/data-elements', (req, res) => {
@@ -58,17 +62,19 @@ app.patch('/scorm/api/crs123/sco456/data-elements', (req, res) => {
   res.json(cmiPack);
 });
 
+app.post('/scorm/api/crs123/sco456/LMSInitialize', (req, res) => {
+  res.type('text/plain; charset=utf-8').send('true');
+});
+
 app.post('/scorm/api/crs123/sco456/LMSCommit', (req, res) => {
   cmiPack = injectReadOnly(cmiPack, req.body);
-  res.json(cmiPack);
+  res.type('text/plain; charset=utf-8').send('true');
 });
 
 app.post('/scorm/api/crs123/sco456/LMSFinish', (req, res) => {
+  console.log('POST /LMSFinish call');
+  console.log(req.body);
   cmiPack = injectReadOnly(cmiPack, req.body);
-  res.json(cmiPack);
-});
-
-app.post('/scorm/api/crs123/sco456/LMSInitialize', (req, res) => {
   res.type('text/plain; charset=utf-8').send('true');
 });
 
