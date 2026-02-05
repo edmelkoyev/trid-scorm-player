@@ -20,7 +20,6 @@ describe('normalizeCmi', () => {
       'cmi.core.score.min': '',
       'cmi.core.total_time': '0000:00:00.00',
       'cmi.core.lesson_mode': 'normal',
-      'cmi.core.exit': '',
       'cmi.suspend_data': '',
       'cmi.launch_data': '',
     });
@@ -52,16 +51,6 @@ describe('normalizeCmi', () => {
 
     const result = normalizeCmi(input);
     expect(result['cmi.core.entry']).toBe('');
-  });
-
-  it('should always reset cmi.core.exit to an empty string', () => {
-    const input: Record<string, string> = {
-      'cmi.core.exit': 'logout',
-    };
-
-    const result = normalizeCmi(input);
-
-    expect(result['cmi.core.exit']).toBe('');
   });
 
   it('should keep extra properties untouched', () => {

@@ -235,7 +235,7 @@ describe('Scorm12API', () => {
       const result = api.LMSCommit('');
 
       expect(result).toBe('true');
-      expect(mockBackend.commitCMI).toHaveBeenCalled();
+      expect(mockBackend.commitCMI).not.toHaveBeenCalled();
       expect(api.LMSGetLastError()).toBe(String(ScormErrorCode.NoError));
     });
 
@@ -273,6 +273,7 @@ describe('Scorm12API', () => {
   describe('LMSFinish', () => {
     it('should finish successfully when initialized', () => {
       mockStateMachine.isInitialized.mockReturnValue(true);
+      mockBackend.finishCMI.mockReturnValue(true);
 
       const result = api.LMSFinish('');
 

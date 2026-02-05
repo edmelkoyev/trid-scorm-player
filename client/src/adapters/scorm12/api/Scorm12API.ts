@@ -144,8 +144,10 @@ export class Scorm12API implements IScormAPI {
       return 'false';
     }
 
+    // delete (window as any).API;
     clearInterval(this.patchTimeout);
     this.stateMachine.terminate();
+
     this.lastError = ScormErrorCode.NoError;
     return 'true';
   }
