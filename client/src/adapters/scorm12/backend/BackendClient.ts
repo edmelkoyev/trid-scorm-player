@@ -17,6 +17,7 @@ export class BackendClient {
     this.updateProgress = updateProgress;
   }
 
+  // not used now
   async commitCMI(cmi: CmiModel): Promise<boolean> {
     try {
       const res = await fetch(this.lmsCommitUrl, {
@@ -40,20 +41,17 @@ export class BackendClient {
     }
   }
 
-  async finishCMI(cmi: CmiModel): Promise<boolean> {
+  finishCMI(cmi: CmiModel): boolean {
     try {
-      const res = await fetch(this.lmsFinish, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ elements: cmi.snapshot() }),
-      });
+      const res = navigator.sendBeacon(
+        this.lmsFinish,
+        new Blob(
+          [JSON.stringify({ elements: cmi.snapshot() })],
+          { type: 'application/json' },
+        ),
+      );
 
-      if (!res.ok) return false;
-
-      const respStr = await res.text();
-      if (typeof respStr !== 'string' || respStr.trim() !== 'true') {
-        return false;
-      }
+      if (!res) return false;
 
       this.updateProgress(true);
 
@@ -76,7 +74,7 @@ export class BackendClient {
       const { elements } = await res.json();
       if (!elements) return false;
 
-      cmi.updateCmi(elements);
+      //cmi.updateCmi(elements);
       this.updateProgress(false);
 
       return true;

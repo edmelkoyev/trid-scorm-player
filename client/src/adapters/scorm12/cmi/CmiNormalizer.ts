@@ -15,7 +15,6 @@ export function normalizeCmi(
     'cmi.core.score.min': cmi['cmi.core.score.min'] || '',
     'cmi.core.total_time': cmi['cmi.core.total_time'] || '0000:00:00.00',
     'cmi.core.lesson_mode': cmi['cmi.core.lesson_mode'] || 'normal',
-    'cmi.core.exit': '',
     'cmi.suspend_data': cmi['cmi.suspend_data'] || '',
     'cmi.launch_data': cmi['cmi.launch_data'] || '',
   };

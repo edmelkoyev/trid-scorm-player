@@ -72,6 +72,7 @@ export class CmiModel {
     );
   }
 
+  // not used now
   updateCmi(cmiElements: Record<string, string>) {
     this.data = { ...this.data, ...cmiElements };
   }

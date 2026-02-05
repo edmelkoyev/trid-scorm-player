@@ -21,6 +21,9 @@ export class Scorm12API implements IScormAPI {
 
   private backend: BackendClient;
 
+  private patchTimeout: NodeJS.Timeout | undefined;
+  private hasUpdates = false;
+
   constructor(
     cmi: CmiModel,
     stateMachine: PlayerStateMachine,
@@ -46,6 +49,13 @@ export class Scorm12API implements IScormAPI {
       this.lastError = ScormErrorCode.GeneralException;
       return 'false';
     }
+
+    this.patchTimeout = setInterval(() => {
+      if (this.hasUpdates) {
+        this.hasUpdates = false;
+        this.backend.saveCMI(this.cmi);
+      }
+    }, 5000);
 
     this.stateMachine.initialize();
     this.timing.startSession();
@@ -90,6 +100,7 @@ export class Scorm12API implements IScormAPI {
       this.lastError = setValueResult
         ? ScormErrorCode.NoError
         : ScormErrorCode.InvalidArgument;
+      if (setValueResult) this.hasUpdates = true;
       return setValueResult ? 'true' : 'false';
     }
 
@@ -111,18 +122,6 @@ export class Scorm12API implements IScormAPI {
       return 'false';
     }
 
-    (async () => {
-      try {
-        const success = await this.backend.commitCMI(this.cmi);
-        if (!success) {
-          window.console.error('LMSCommit backend commit failed');
-          this.lastError = ScormErrorCode.GeneralException;
-        }
-      } catch (err) {
-        window.console.error('LMSCommit backend error', err);
-        this.lastError = ScormErrorCode.GeneralException;
-      }
-    })();
     this.lastError = ScormErrorCode.NoError;
     return 'true';
   }
@@ -138,18 +137,14 @@ export class Scorm12API implements IScormAPI {
     }
 
     this.timing.finalizeSession();
-    (async () => {
-      try {
-        const success = await this.backend.finishCMI(this.cmi);
-        if (!success) {
-          window.console.error('LMSFinish backend commit failed');
-          this.lastError = ScormErrorCode.GeneralException;
-        }
-      } catch (err) {
-        window.console.error('LMSFinish backend error', err);
-        this.lastError = ScormErrorCode.GeneralException;
-      }
-    })();
+    const success = this.backend.finishCMI(this.cmi);
+    if (!success) {
+      window.console.error('LMSFinish backend commit failed');
+      this.lastError = ScormErrorCode.GeneralException;
+      return 'false';
+    }
+
+    clearInterval(this.patchTimeout);
     this.stateMachine.terminate();
     this.lastError = ScormErrorCode.NoError;
     return 'true';
