@@ -52,13 +52,17 @@ export class BackendClient {
       );
 
       if (!res) return false;
-
-      this.updateProgress(true);
-
-      return true;
     } catch {
       return false;
     }
+
+    try {
+      this.updateProgress(true);
+    } catch (_e) {
+      // ignore
+    }
+
+    return true;
   }
 
   async saveCMI(cmi: CmiModel): Promise<boolean> {
@@ -74,7 +78,7 @@ export class BackendClient {
       const { elements } = await res.json();
       if (!elements) return false;
 
-      //cmi.updateCmi(elements);
+      // cmi.updateCmi(elements);
       this.updateProgress(false);
 
       return true;
